@@ -9,7 +9,7 @@ import lombok.Data;
  *  password - 사용자의 비밀번호
  *  password2 - 비밀번호 확인
  *  nickname - 사용자의 닉네임
- *  imageUrl - 프로필 이미지 URL
+ *  profileImageUrl - 프로필 이미지 URL
  */
 @Data
 public class UserRequest {
@@ -17,5 +17,5 @@ public class UserRequest {
     private String password;
     private String password2;
     private String nickname;
-    private String imageUrl;
+    private String profileImageUrl;
 }

@@ -7,12 +7,12 @@ import lombok.Data;
  * Fields:
  *  email - 사용자의 이메일
  *  nickname - 사용자의 닉네임
- *  imageUrl - 프로필 이미지 URL
+ *  profileImageUrl - 프로필 이미지 URL
  */
 @Data
 public class UserResponse {
 //    private Integer id;
     private String email;
     private String nickname;
-    private String imageUrl;
+    private String profileImageUrl;
 }
