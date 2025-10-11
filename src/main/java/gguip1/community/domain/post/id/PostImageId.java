@@ -14,18 +14,14 @@ import lombok.NoArgsConstructor;
  * Fields:
  *  post - 게시물 (Post 엔티티)
  *  image - 이미지 (Image 엔티티)
- *  imageOrder - 이미지 순서 (Byte)
  */
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode
 public class PostImageId {
     @Column(name = "post_id", nullable = false)
-    private Post post;
+    private Long postId;
 
     @Column(name = "image_id", nullable = false)
-    private Image image;
-
-    @Column(name = "image_order", nullable = false)
-    private Byte imageOrder;
+    private Long imageId;
 }
