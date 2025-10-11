@@ -3,7 +3,9 @@ package gguip1.community.domain.user.entity;
 import gguip1.community.domain.image.entity.Image;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
@@ -23,6 +25,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "users")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter @Setter
 public class User {
     @Id
     @Column(name = "user_id", nullable = false, unique = true)

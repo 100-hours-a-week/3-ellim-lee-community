@@ -3,6 +3,7 @@ package gguip1.community.domain.auth.entity;
 import gguip1.community.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
@@ -20,6 +21,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "sessions")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class Session {
     @Id
     @Column(name = "session_id", nullable = false, unique = true)
