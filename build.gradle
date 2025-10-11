@@ -27,6 +27,15 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    /**
+     * Spring Security를 사용하지 않으려고 했으나,
+     * BCrypt를 직접 구현하기는 너무 시간이 걸릴 것 같고
+     * 다른 BCrypt 라이브러리를 사용하기도 애매해서
+     * Spring Security를 도입하기로 결정함.
+     */
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	annotationProcessor 'org.projectlombok:lombok'
