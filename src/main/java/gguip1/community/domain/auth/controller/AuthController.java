@@ -2,8 +2,11 @@ package gguip1.community.domain.auth.controller;
 
 import gguip1.community.domain.auth.dto.AuthRequest;
 import gguip1.community.domain.auth.service.AuthService;
+import gguip1.community.global.annotation.RequireAuth;
 import gguip1.community.global.response.ApiResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,25 +20,26 @@ import java.util.UUID;
  *  - DELETE /auth: User logout
  */
 @RestController
+@RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;
-
-    public AuthController(AuthService authService) {
-        this.authService = authService;
-    }
 
     @PostMapping("/auth")
     public ResponseEntity<ApiResponse<Void>> login(@RequestBody AuthRequest request) {
         UUID sessionId = authService.login(request);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Set-Cookie", "sessionId=" + sessionId + "; HttpOnly; Path=/; Max-Age=432000");
+        ResponseCookie cookie = ResponseCookie.from("sessionId", sessionId.toString())
+                .httpOnly(true)
+                .path("/")
+                .maxAge(432000)
+                .build();
 
         return ResponseEntity.ok()
-                .headers(headers)
+                .header(HttpHeaders.SET_COOKIE, cookie.toString())
                 .body(ApiResponse.success("login_success", null));
     }
 
+    @RequireAuth
     @DeleteMapping("/auth")
     public ResponseEntity<ApiResponse<Void>> logout(@CookieValue("sessionId") UUID sessionId) {
         authService.logout(sessionId);
