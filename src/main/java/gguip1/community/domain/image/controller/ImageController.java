@@ -1,4 +1,4 @@
-package gguip1.community.domain.image;
+package gguip1.community.domain.image.controller;
 
 import gguip1.community.domain.image.dto.ImageResponse;
 import gguip1.community.global.response.ApiResponse;
