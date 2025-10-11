@@ -20,17 +20,17 @@ public class UserController {
         return ResponseEntity.ok(new ApiResponse<>("Success", new UserResponse("test-email@test.com", "username", null), null));
     }
 
-    @PatchMapping("users/{userId}")
+    @PatchMapping("/users/{userId}")
     public ResponseEntity<ApiResponse<Void>> updateUser(@PathVariable Integer userId, @RequestBody UserUpdateRequest request) {
         return ResponseEntity.ok(new ApiResponse<>("Success", null, null));
     }
 
-    @PatchMapping("users/{userId}/password")
+    @PatchMapping("/users/{userId}/password")
     public ResponseEntity<ApiResponse<Void>> updateUserPassword(@PathVariable Integer userId, @RequestBody UserPasswordUpdateRequest request) {
         return ResponseEntity.ok(new ApiResponse<>("Success", null, null));
     }
 
-    @DeleteMapping("users/{userId}")
+    @DeleteMapping("/users/{userId}")
     public ResponseEntity<Void> deleteUser(@PathVariable Integer userId) {
         return ResponseEntity.noContent().build();
     }
