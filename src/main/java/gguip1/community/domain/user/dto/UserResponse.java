@@ -1,5 +1,6 @@
 package gguip1.community.domain.user.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
@@ -10,6 +11,7 @@ import lombok.Data;
  *  profileImageUrl - 프로필 이미지 URL
  */
 @Data
+@AllArgsConstructor
 public class UserResponse {
 //    private Integer id;
     private String email;
