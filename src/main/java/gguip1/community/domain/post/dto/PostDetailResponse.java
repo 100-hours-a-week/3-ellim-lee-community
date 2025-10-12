@@ -1,7 +1,12 @@
 package gguip1.community.domain.post.dto;
 
 import gguip1.community.domain.user.dto.AuthorResponse;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 게시글 상세 응답 DTO입니다.
@@ -17,12 +22,15 @@ import lombok.Data;
  *  isLiked - 현재 사용자가 좋아요를 눌렀는지 여부
  */
 @Data
+@AllArgsConstructor
+@Builder
 public class PostDetailResponse {
 //    private Long postId;
     private String title;
     private String content;
+    private List<String> imageUrls;
     private AuthorResponse author;
-    private String createdAt;
+    private LocalDateTime createdAt;
     private Integer likeCount;
     private Integer commentCount;
     private Integer viewCount;

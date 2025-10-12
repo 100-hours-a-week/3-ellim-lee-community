@@ -2,10 +2,10 @@ package gguip1.community.domain.post.entity;
 
 import gguip1.community.domain.user.entity.User;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 게시물 정보를 나타내는 엔티티입니다.
@@ -22,6 +22,10 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "posts")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
+@Getter
+@Setter
 public class Post {
     @Id
     @Column(name = "post_id", nullable = false, unique = true)
@@ -38,6 +42,7 @@ public class Post {
     @Column(name = "content", nullable = false, columnDefinition = "TEXT")
     private String content;
 
+    @Builder.Default
     @Column(name = "status", nullable = false)
     private Byte status = 0;
 
@@ -49,4 +54,7 @@ public class Post {
 
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PostImage> postImages;
 }

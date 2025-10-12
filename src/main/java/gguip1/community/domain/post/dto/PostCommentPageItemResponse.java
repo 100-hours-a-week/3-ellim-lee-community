@@ -1,7 +1,11 @@
 package gguip1.community.domain.post.dto;
 
 import gguip1.community.domain.user.dto.AuthorResponse;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+
+import java.time.LocalDateTime;
 
 /**
  * 댓글 페이지 아이템 응답 DTO입니다.
@@ -13,10 +17,12 @@ import lombok.Data;
  *  isAuthor - 현재 사용자가 댓글 작성자인지 여부
  */
 @Data
+@AllArgsConstructor
+@Builder
 public class PostCommentPageItemResponse {
     private Long commentId;
     private String content;
     private AuthorResponse author;
-    private String createdAt;
+    private LocalDateTime createdAt;
     private Boolean isAuthor;
 }

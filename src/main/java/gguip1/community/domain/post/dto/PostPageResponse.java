@@ -1,5 +1,6 @@
 package gguip1.community.domain.post.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.List;
  *  lastPostId - 마지막 게시글 ID (다음 페이지 요청 시 사용)
  */
 @Data
+@AllArgsConstructor
 public class PostPageResponse {
     private List<PostPageItemResponse> posts;
     private boolean hasNext;
