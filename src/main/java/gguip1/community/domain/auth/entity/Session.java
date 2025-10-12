@@ -7,14 +7,6 @@ import lombok.*;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-/**
- * 인증에 사용되는 세션 정보를 나타내는 엔티티입니다.
- * Fields: 
- *  sessionId - 세션의 고유 식별자 (UUID)
- *  userId - 세션이 속한 사용자 ID (Long)
- *  expiresAt - 세션 만료 시간 (LocalDateTime)
- *  createdAt - 세션 생성 시간 (LocalDateTime)
- */
 @Entity
 @Table(name = "sessions")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

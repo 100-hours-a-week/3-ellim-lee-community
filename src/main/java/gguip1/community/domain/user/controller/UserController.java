@@ -56,7 +56,7 @@ public class UserController {
     }
 
     @RequireAuth
-    @PatchMapping("/uers/me/password")
+    @PatchMapping("/users/me/password")
     public ResponseEntity<ApiResponse<Void>> updateMyPassword(HttpServletRequest request, @RequestBody UserPasswordUpdateRequest requestBody) {
         Session session = (Session) request.getAttribute("session");
         userService.updateMyPassword(session, requestBody);
@@ -73,6 +73,7 @@ public class UserController {
     @RequireAuth
     @DeleteMapping("/users/{userId}")
     public ResponseEntity<Void> deleteUser(@PathVariable Integer userId) {
+        userService.deleteUser(userId);
         return ResponseEntity.noContent().build();
     }
 
