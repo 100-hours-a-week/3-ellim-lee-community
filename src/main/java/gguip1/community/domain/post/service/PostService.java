@@ -17,6 +17,8 @@ import gguip1.community.domain.post.repository.PostRepository;
 import gguip1.community.domain.user.dto.AuthorResponse;
 import gguip1.community.domain.user.entity.User;
 import gguip1.community.domain.user.repository.UserRepository;
+import gguip1.community.global.exception.ErrorCode;
+import gguip1.community.global.exception.ErrorException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -41,7 +43,8 @@ public class PostService {
             images = imageRepository.findAllById(postRequest.getImageIds());
         }
 
-        User user = userRepository.getReferenceById(session.getUserId());
+        User user = userRepository.findById(session.getUserId())
+                .orElseThrow(() -> new ErrorException(ErrorCode.USER_NOT_FOUND));
 
         Post post = Post.builder()
                 .user(user)
@@ -50,6 +53,7 @@ public class PostService {
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .build();
+
         postRepository.save(post);
 
         AtomicInteger order = new AtomicInteger(0);
@@ -68,10 +72,10 @@ public class PostService {
     }
 
     public void createLike(Session session, Long postId) {
-        Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("Post not found"));
         User user = userRepository.findById(session.getUserId())
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+                .orElseThrow(() -> new ErrorException(ErrorCode.USER_NOT_FOUND));
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND));
 
         PostLikeId postLikeId = new PostLikeId(session.getUserId(), postId);
         PostLike postLike = PostLike.builder()
@@ -85,9 +89,7 @@ public class PostService {
     }
 
     public void deleteLike(Session session, Long postId) {
-        PostLike postLike = postLikeRepository.findById(new PostLikeId(session.getUserId(), postId))
-                .orElseThrow(() -> new IllegalArgumentException("Like not found"));
-        postLikeRepository.delete(postLike);
+        postLikeRepository.deleteById(new PostLikeId(session.getUserId(), postId));
     }
 
     public PostPageResponse getPosts(Long lastPostId, int pageSize) {
@@ -142,7 +144,7 @@ public class PostService {
 
     public PostDetailResponse getPostDetail(Long postId, Session session) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("Post not found"));
+                .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND));
 
         User user = post.getUser();
         Long profileImageId = user.getProfileImage() != null
@@ -175,10 +177,10 @@ public class PostService {
 
     public void updatePost(Session session, Long postId, PostUpdateRequest postUpdateRequest) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("Post not found"));
+                .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND));
 
         if (!post.getUser().getUserId().equals(session.getUserId())) {
-            throw new IllegalArgumentException("You are not the author of this post");
+            throw new ErrorException(ErrorCode.ACCESS_DENIED);
         }
 
         post.setTitle(postUpdateRequest.getTitle());
@@ -211,10 +213,10 @@ public class PostService {
 
     public void deletePost(Session session, Long postId) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("Post not found"));
+                .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND));
 
         if (!post.getUser().getUserId().equals(session.getUserId())) {
-            throw new IllegalArgumentException("You are not the author of this post");
+            throw new ErrorException(ErrorCode.ACCESS_DENIED);
         }
 
         postRepository.delete(post);
@@ -266,9 +268,9 @@ public class PostService {
 
     public void createComment(Session session, Long postId, PostCommentRequest request) {
         User user = userRepository.findById(session.getUserId())
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+                .orElseThrow(() -> new ErrorException(ErrorCode.USER_NOT_FOUND));
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("Post not found"));
+                .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND));
         PostComment postComment = PostComment.builder()
                 .user(user)
                 .post(post)
@@ -281,12 +283,12 @@ public class PostService {
 
     public void updateComment(Session session, Long postId, Long commentId, PostCommentRequest request) {
         User user = userRepository.findById(session.getUserId())
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+                .orElseThrow(() -> new ErrorException(ErrorCode.USER_NOT_FOUND));
         PostComment postComment = postCommentRepository.findById(commentId)
-                .orElseThrow(() -> new IllegalArgumentException("Comment not found"));
+                .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND));
 
         if (!postComment.getUser().getUserId().equals(user.getUserId())) {
-            throw new IllegalArgumentException("You are not the author of this comment");
+            throw new ErrorException(ErrorCode.ACCESS_DENIED);
         }
 
         postComment.setContent(request.getContent());
@@ -297,12 +299,12 @@ public class PostService {
 
     public void deleteComment(Session session, Long postId, Long commentId) {
         User user = userRepository.findById(session.getUserId())
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+                .orElseThrow(() -> new ErrorException(ErrorCode.USER_NOT_FOUND));
         PostComment postComment = postCommentRepository.findById(commentId)
-                .orElseThrow(() -> new IllegalArgumentException("Comment not found"));
+                .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND));
 
         if (!postComment.getUser().getUserId().equals(user.getUserId())) {
-            throw new IllegalArgumentException("You are not the author of this comment");
+            throw new ErrorException(ErrorCode.ACCESS_DENIED);
         }
 
         postCommentRepository.delete(postComment);

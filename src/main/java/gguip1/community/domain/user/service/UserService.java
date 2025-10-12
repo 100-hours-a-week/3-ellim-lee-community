@@ -9,6 +9,8 @@ import gguip1.community.domain.user.dto.UserResponse;
 import gguip1.community.domain.user.dto.UserUpdateRequest;
 import gguip1.community.domain.user.entity.User;
 import gguip1.community.domain.user.repository.UserRepository;
+import gguip1.community.global.exception.ErrorCode;
+import gguip1.community.global.exception.ErrorException;
 import gguip1.community.global.session.SessionManager;
 import lombok.RequiredArgsConstructor;
 import org.mindrot.jbcrypt.BCrypt;
@@ -24,21 +26,21 @@ public class UserService {
 
     public void createUser(UserRequest request) {
         if (!request.getPassword().equals(request.getPassword2())){
-            throw new IllegalArgumentException("Passwords do not match");
+            throw new ErrorException(ErrorCode.PASSWORD_MISMATCH);
         }
 
         if (userRepository.existsByEmail(request.getEmail())) {
-            throw new IllegalArgumentException("Email already in use");
+            throw new ErrorException(ErrorCode.DUPLICATE_EMAIL);
         }
 
         if (userRepository.existsByNickname(request.getNickname())) {
-            throw new IllegalArgumentException("Nickname already in use");
+            throw new ErrorException(ErrorCode.DUPLICATE_NICKNAME);
         }
 
         Image profileImage = null;
         if (request.getProfileImageId() != null) {
             profileImage = imageRepository.findById(request.getProfileImageId())
-                    .orElseThrow(() -> new IllegalArgumentException("Profile image not found"));
+                    .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND));
         }
 
         User user = User.builder()
@@ -59,7 +61,7 @@ public class UserService {
 
     public UserResponse getUser(Integer userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+                .orElseThrow(() -> new ErrorException(ErrorCode.USER_NOT_FOUND));
 
         return new UserResponse(
                 user.getEmail(),
@@ -73,18 +75,22 @@ public class UserService {
     }
 
     public void updateUser(Integer userId, UserUpdateRequest request){
-            User user = userRepository.findById(userId)
-                    .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ErrorException(ErrorCode.USER_NOT_FOUND));
 
-            if (request.getNickname() != null && !request.getNickname().equals(user.getNickname())){
-                user.changeNickname(request.getNickname());
+        if (request.getNickname() != null && !request.getNickname().equals(user.getNickname())) {
+            boolean exists = userRepository.existsByNickname(request.getNickname());
+            if (exists) {
+                throw new ErrorException(ErrorCode.DUPLICATE_EMAIL);
             }
+            user.changeNickname(request.getNickname());
+        }
 
-            if (request.getProfileImageId() != null){
-                Image profileImage = imageRepository.findById(request.getProfileImageId())
-                        .orElseThrow(() -> new IllegalArgumentException("Profile image not found"));
-                user.changeProfileImage(profileImage);
-            }
+        if (request.getProfileImageId() != null){
+            Image profileImage = imageRepository.findById(request.getProfileImageId())
+                    .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND));
+            user.changeProfileImage(profileImage);
+        }
 
             userRepository.save(user);
     }
@@ -95,11 +101,11 @@ public class UserService {
 
     public void updateUserPassword(Integer userId, UserPasswordUpdateRequest request){
         if (!request.getNewPassword().equals(request.getNewPassword2())){
-            throw new IllegalArgumentException("Passwords do not match");
+            throw new ErrorException(ErrorCode.PASSWORD_MISMATCH);
         }
 
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+                .orElseThrow(() -> new ErrorException(ErrorCode.USER_NOT_FOUND));
 
         user.changePassword(BCrypt.hashpw(request.getNewPassword(), BCrypt.gensalt()));
         userRepository.save(user);
@@ -107,7 +113,7 @@ public class UserService {
 
     public void deleteUser(Integer userId) {
         if (!userRepository.existsById(userId)) {
-            throw new IllegalArgumentException("User not found");
+            throw new ErrorException(ErrorCode.NOT_FOUND);
         }
 
         userRepository.deleteById(userId);
