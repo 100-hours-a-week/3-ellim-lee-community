@@ -2,8 +2,7 @@ package gguip1.community.domain.post.entity;
 
 import gguip1.community.domain.user.entity.User;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -22,6 +21,10 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "post_comments")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
+@Getter
+@Setter
 public class PostComment {
     @Id
     @Column(name = "comment_id", nullable = false, unique = true)
@@ -39,6 +42,7 @@ public class PostComment {
     @Column(name = "content", nullable = false, columnDefinition = "TEXT")
     private String content;
 
+    @Builder.Default
     @Column(name = "status", nullable = false)
     private Byte status = 0;
 

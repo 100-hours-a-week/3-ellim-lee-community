@@ -1,5 +1,7 @@
 package gguip1.community.domain.auth.dto;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 /**
@@ -10,6 +12,8 @@ import lombok.Data;
  */
 @Data
 public class AuthRequest {
+    @Email
+    @NotBlank
     private String email;
     private String password;
 }

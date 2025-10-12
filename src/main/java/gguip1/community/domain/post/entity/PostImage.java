@@ -3,12 +3,14 @@ package gguip1.community.domain.post.entity;
 import gguip1.community.domain.image.entity.Image;
 import gguip1.community.domain.post.id.PostImageId;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Table(name = "post_images")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
+@Getter
 public class PostImage {
     @EmbeddedId
     private PostImageId postImageId;

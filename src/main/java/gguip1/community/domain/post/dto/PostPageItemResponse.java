@@ -1,9 +1,12 @@
 package gguip1.community.domain.post.dto;
 
 import gguip1.community.domain.user.dto.AuthorResponse;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 게시글 페이지 아이템 응답 DTO입니다.
@@ -18,8 +21,11 @@ import java.time.LocalDateTime;
  *  viewCount - 조회 수
  */
 @Data
+@AllArgsConstructor
+@Builder
 public class PostPageItemResponse {
     private Long postId;
+    private List<String> imageUrls;
     private String title;
     private String content;
     private AuthorResponse author;
