@@ -1,5 +1,6 @@
 package gguip1.community.domain.user.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
@@ -9,8 +10,9 @@ import lombok.Data;
  *  profileImageUrl - 작성자의 프로필 이미지 URL
  */
 @Data
+@AllArgsConstructor
 public class AuthorResponse {
 //    private Integer userId;
     private String nickname;
-    private String profileImageUrl;
+    private Long profileImageId;
 }
