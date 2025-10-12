@@ -2,10 +2,7 @@ package gguip1.community.domain.user.entity;
 
 import gguip1.community.domain.image.entity.Image;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -25,7 +22,9 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "users")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Getter @Setter
+@AllArgsConstructor
+@Builder
+@Getter
 public class User {
     @Id
     @Column(name = "user_id", nullable = false, unique = true)
@@ -45,10 +44,11 @@ public class User {
     @Column(name = "nickname", nullable = false, unique = true)
     private String nickname;
 
+    @Builder.Default
     @Column(name = "status", nullable = false)
     private Byte status = 0;
 
-    @Column(name = "created_at", nullable = false)
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at", nullable = false)
@@ -56,4 +56,16 @@ public class User {
 
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
+
+    public void changeNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public void changeProfileImage(Image profileImage) {
+        this.profileImage = profileImage;
+    }
+
+    public void changePassword(String password) {
+        this.password = password;
+    }
 }

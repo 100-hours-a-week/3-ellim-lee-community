@@ -1,7 +1,7 @@
 package gguip1.community.domain.user.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 
 /**
  * 사용자 응답 DTO입니다. (내 정보 조회 등)
@@ -10,10 +10,9 @@ import lombok.Data;
  *  nickname - 사용자의 닉네임
  *  profileImageUrl - 프로필 이미지 URL
  */
-@Data
+@Getter
 @AllArgsConstructor
 public class UserResponse {
-//    private Integer id;
     private String email;
     private String nickname;
     private String profileImageUrl;

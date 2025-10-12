@@ -10,6 +10,6 @@ import lombok.Data;
  */
 @Data
 public class UserPasswordUpdateRequest {
-    private String password;
-    private String password2;
+    private String newPassword;
+    private String newPassword2;
 }
