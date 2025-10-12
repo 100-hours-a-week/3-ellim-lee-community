@@ -15,7 +15,7 @@ public class RdbmsSessionManager implements SessionManager{
     private final SessionRepository sessionRepository;
 
     @Override
-    public UUID createSession(Integer userId) {
+    public Session createSession(Integer userId) {
         UUID sessionId = UUID.randomUUID();
         LocalDateTime now = LocalDateTime.now();
 
@@ -27,20 +27,12 @@ public class RdbmsSessionManager implements SessionManager{
                 .build();
 
         sessionRepository.save(session);
-        return sessionId;
+        return session;
     }
 
-    @Override
-    public boolean isValid(UUID sessionId) {
-        Optional<Session> sessionOpt = sessionRepository.findById(sessionId);
-
-        if (sessionOpt.isEmpty()) {
-            return false;
-        }
-
-        Session session = sessionOpt.get();
-
-        return !session.isExpired();
+    public Optional<Session> getValidSession(UUID sessionId) {
+        return sessionRepository.findById(sessionId)
+                .filter(session -> !session.isExpired());
     }
 
     @Override

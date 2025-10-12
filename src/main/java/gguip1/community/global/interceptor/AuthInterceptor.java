@@ -1,5 +1,6 @@
 package gguip1.community.global.interceptor;
 
+import gguip1.community.domain.auth.entity.Session;
 import gguip1.community.global.annotation.RequireAuth;
 import gguip1.community.global.session.SessionManager;
 import jakarta.servlet.http.Cookie;
@@ -33,13 +34,10 @@ public class AuthInterceptor implements HandlerInterceptor {
 
         UUID sessionId = getSessionIdFromCookie(request);
 
-        if (sessionId == null || !sessionManager.isValid(sessionId)){
-            System.out.println("Unauthorized access attempt: No valid session");
-            System.out.println("Session ID from cookie: " + sessionId);
-            System.out.println(sessionManager.isValid(sessionId));
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            return false;
-        }
+        Session session = sessionManager.getValidSession(sessionId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid or expired session"));
+
+        request.setAttribute("session", session);
 
         return true;
     }
