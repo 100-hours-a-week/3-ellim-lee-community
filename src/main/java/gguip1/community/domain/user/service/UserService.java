@@ -12,6 +12,7 @@ import gguip1.community.domain.user.repository.UserRepository;
 import gguip1.community.global.exception.ErrorCode;
 import gguip1.community.global.exception.ErrorException;
 import gguip1.community.global.session.SessionManager;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final ImageRepository imageRepository;
 
+    @Transactional
     public void createUser(UserRequest request) {
         if (!request.getPassword().equals(request.getPassword2())){
             throw new ErrorException(ErrorCode.PASSWORD_MISMATCH);
@@ -74,6 +76,7 @@ public class UserService {
         updateUser(session.getUserId(), request);
     }
 
+    @Transactional
     public void updateUser(Integer userId, UserUpdateRequest request){
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ErrorException(ErrorCode.USER_NOT_FOUND));
@@ -99,6 +102,7 @@ public class UserService {
         updateUserPassword(session.getUserId(), request);
     }
 
+    @Transactional
     public void updateUserPassword(Integer userId, UserPasswordUpdateRequest request){
         if (!request.getNewPassword().equals(request.getNewPassword2())){
             throw new ErrorException(ErrorCode.PASSWORD_MISMATCH);
@@ -111,6 +115,7 @@ public class UserService {
         userRepository.save(user);
     }
 
+    @Transactional
     public void deleteUser(Integer userId) {
         if (!userRepository.existsById(userId)) {
             throw new ErrorException(ErrorCode.NOT_FOUND);

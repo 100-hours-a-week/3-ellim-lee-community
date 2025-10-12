@@ -25,12 +25,7 @@ public class LocalStorageImageService implements ImageService{
         String filename = UUID.randomUUID() + "_" + file.getOriginalFilename();
         Path path = Paths.get(uploadDir + filename);
         Files.createDirectories(path.getParent());
-
-        System.out.println("File uploaded to: " + path.toString());
-
         file.transferTo(path.toFile());
-
-        System.out.println("File uploaded to: " + path.toString());
 
         Image image = Image.builder()
                 .url(uploadDir + filename)
@@ -40,7 +35,7 @@ public class LocalStorageImageService implements ImageService{
         imageRepository.save(image);
 
         return new ImageResponse() {{
-            setImageId(image.getImageId()); // 실제로는 DB에서 생성된 ID를 반환해야 합니다.
+            setImageId(image.getImageId());
             setImageUrl(image.getUrl());
         }};
     }

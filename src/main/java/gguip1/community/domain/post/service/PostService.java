@@ -16,6 +16,7 @@ import gguip1.community.domain.user.entity.User;
 import gguip1.community.domain.user.repository.UserRepository;
 import gguip1.community.global.exception.ErrorCode;
 import gguip1.community.global.exception.ErrorException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +35,7 @@ public class PostService {
     private final PostLikeRepository postLikeRepository;
     private final PostCommentRepository postCommentRepository;
 
+    @Transactional
     public void createPost(Session session, PostRequest postRequest) {
         List<Image> images = Collections.emptyList();
         if (postRequest.getImageIds() != null && !postRequest.getImageIds().isEmpty()) {
@@ -73,6 +75,7 @@ public class PostService {
         postImageRepository.saveAll(postImages);
     }
 
+    @Transactional
     public void createLike(Session session, Long postId) {
         User user = userRepository.findById(session.getUserId())
                 .orElseThrow(() -> new ErrorException(ErrorCode.USER_NOT_FOUND));
@@ -96,6 +99,7 @@ public class PostService {
         postRepository.save(post);
     }
 
+    @Transactional
     public void deleteLike(Session session, Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND));
@@ -111,6 +115,7 @@ public class PostService {
         postRepository.save(post);
     }
 
+    @Transactional
     public PostPageResponse getPosts(Long lastPostId, int pageSize) {
         List<Post> posts;
 
@@ -161,6 +166,7 @@ public class PostService {
         );
     }
 
+    @Transactional
     public PostDetailResponse getPostDetail(Long postId, Session session) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND));
@@ -197,6 +203,7 @@ public class PostService {
     }
 
 
+    @Transactional
     public void updatePost(Session session, Long postId, PostUpdateRequest postUpdateRequest) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND));
@@ -233,6 +240,7 @@ public class PostService {
         postImageRepository.saveAll(postImages);
     }
 
+    @Transactional
     public void deletePost(Session session, Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND));
@@ -244,6 +252,7 @@ public class PostService {
         postRepository.delete(post);
     }
 
+    @Transactional
     public PostCommentPageResponse getComments(Session session, Long postId, Long lastCommentId, int size) {
         List<PostComment> comments;
 
@@ -288,6 +297,7 @@ public class PostService {
         );
     }
 
+    @Transactional
     public void createComment(Session session, Long postId, PostCommentRequest request) {
         User user = userRepository.findById(session.getUserId())
                 .orElseThrow(() -> new ErrorException(ErrorCode.USER_NOT_FOUND));
@@ -306,6 +316,7 @@ public class PostService {
         postCommentRepository.save(postComment);
     }
 
+    @Transactional
     public void updateComment(Session session, Long postId, Long commentId, PostCommentRequest request) {
         User user = userRepository.findById(session.getUserId())
                 .orElseThrow(() -> new ErrorException(ErrorCode.USER_NOT_FOUND));
@@ -322,6 +333,7 @@ public class PostService {
         postCommentRepository.save(postComment);
     }
 
+    @Transactional
     public void deleteComment(Session session, Long postId, Long commentId) {
         User user = userRepository.findById(session.getUserId())
                 .orElseThrow(() -> new ErrorException(ErrorCode.USER_NOT_FOUND));
