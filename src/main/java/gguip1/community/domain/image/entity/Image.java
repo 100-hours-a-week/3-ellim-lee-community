@@ -1,8 +1,7 @@
 package gguip1.community.domain.image.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -18,6 +17,9 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "images")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
+@Getter
 public class Image {
     @Id
     @Column(name = "image_id", nullable = false, unique = true)
@@ -27,6 +29,7 @@ public class Image {
     @Column(name = "url", nullable = false)
     private String url;
 
+    @Builder.Default
     @Column(name = "status", nullable = false)
     private Byte status = 0;
 
