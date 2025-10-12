@@ -3,6 +3,8 @@ package gguip1.community.domain.auth.service;
 import gguip1.community.domain.auth.dto.AuthRequest;
 import gguip1.community.domain.user.entity.User;
 import gguip1.community.domain.user.repository.UserRepository;
+import gguip1.community.global.exception.ErrorCode;
+import gguip1.community.global.exception.ErrorException;
 import gguip1.community.global.session.SessionManager;
 import lombok.RequiredArgsConstructor;
 import org.mindrot.jbcrypt.BCrypt;
@@ -18,12 +20,12 @@ public class AuthService {
 
     public UUID login(AuthRequest request){
         User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid user ID"));
+                .orElseThrow(() -> new ErrorException(ErrorCode.USER_NOT_FOUND));
 
         if (BCrypt.checkpw(request.getPassword(), user.getPassword())){
             return sessionManager.createSession(user.getUserId()).getSessionId();
         } else {
-            throw new IllegalArgumentException("Invalid password");
+            throw new ErrorException(ErrorCode.PASSWORD_MISMATCH);
         }
     }
 
