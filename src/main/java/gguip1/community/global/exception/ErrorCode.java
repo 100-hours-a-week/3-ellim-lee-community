@@ -24,6 +24,7 @@ public enum ErrorCode {
     // 409
     DUPLICATE_EMAIL(HttpStatus.CONFLICT, "DUPLICATE_EMAIL", "이미 사용 중인 이메일입니다."),
     DUPLICATE_NICKNAME(HttpStatus.CONFLICT, "DUPLICATE_NICKNAME", "이미 사용 중인 닉네임입니다."),
+    DUPLICATE_LIKE(HttpStatus.CONFLICT, "DUPLICATE_LIKE", "이미 좋아요를 눌렀습니다."),
 
     // 500
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "INTERNAL_SERVER_ERROR", "서버에 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");

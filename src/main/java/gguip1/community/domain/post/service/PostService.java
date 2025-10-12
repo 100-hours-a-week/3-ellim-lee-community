@@ -4,10 +4,7 @@ import gguip1.community.domain.auth.entity.Session;
 import gguip1.community.domain.image.entity.Image;
 import gguip1.community.domain.image.repository.ImageRepository;
 import gguip1.community.domain.post.dto.*;
-import gguip1.community.domain.post.entity.Post;
-import gguip1.community.domain.post.entity.PostComment;
-import gguip1.community.domain.post.entity.PostImage;
-import gguip1.community.domain.post.entity.PostLike;
+import gguip1.community.domain.post.entity.*;
 import gguip1.community.domain.post.id.PostImageId;
 import gguip1.community.domain.post.id.PostLikeId;
 import gguip1.community.domain.post.repository.PostCommentRepository;
@@ -54,6 +51,11 @@ public class PostService {
                 .updatedAt(LocalDateTime.now())
                 .build();
 
+        PostStat postStat = PostStat.builder()
+                .post(post)
+                .build();
+
+        post.setPostStat(postStat);
         postRepository.save(post);
 
         AtomicInteger order = new AtomicInteger(0);
@@ -77,6 +79,10 @@ public class PostService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND));
 
+        if (postLikeRepository.existsById(new PostLikeId(session.getUserId(), postId))) {
+            throw new ErrorException(ErrorCode.DUPLICATE_LIKE);
+        }
+
         PostLikeId postLikeId = new PostLikeId(session.getUserId(), postId);
         PostLike postLike = PostLike.builder()
                 .postLikeId(postLikeId)
@@ -85,11 +91,24 @@ public class PostService {
                 .createdAt(LocalDateTime.now())
                 .build();
 
+        post.getPostStat().incrementLikeCount();
         postLikeRepository.save(postLike);
+        postRepository.save(post);
     }
 
     public void deleteLike(Session session, Long postId) {
-        postLikeRepository.deleteById(new PostLikeId(session.getUserId(), postId));
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND));
+
+        PostLikeId postLikeId = new PostLikeId(session.getUserId(), postId);
+
+        if (!postLikeRepository.existsById(postLikeId)) {
+            throw new ErrorException(ErrorCode.NOT_FOUND);
+        }
+
+        post.getPostStat().decrementLikeCount();
+        postLikeRepository.deleteById(postLikeId);
+        postRepository.save(post);
     }
 
     public PostPageResponse getPosts(Long lastPostId, int pageSize) {
@@ -125,9 +144,9 @@ public class PostService {
                                     profileImageId
                             ))
                             .createdAt(post.getCreatedAt())
-                            .likeCount(0)
-                            .commentCount(0)
-                            .viewCount(0)
+                            .likeCount(post.getPostStat().getLikeCount())
+                            .commentCount(post.getPostStat().getCommentCount())
+                            .viewCount(post.getPostStat().getViewCount())
                             .build();
                 })
                 .toList();
@@ -145,6 +164,9 @@ public class PostService {
     public PostDetailResponse getPostDetail(Long postId, Session session) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND));
+
+        post.getPostStat().incrementViewCount();
+        postRepository.save(post);
 
         User user = post.getUser();
         Long profileImageId = user.getProfileImage() != null
@@ -166,9 +188,9 @@ public class PostService {
                         profileImageId
                 ))
                 .createdAt(post.getCreatedAt())
-                .likeCount(0)
-                .commentCount(0)
-                .viewCount(0)
+                .likeCount(post.getPostStat().getLikeCount())
+                .commentCount(post.getPostStat().getCommentCount())
+                .viewCount(post.getPostStat().getViewCount())
                 .isAuthor(isAuthor)
                 .isLiked(false)
                 .build();
@@ -271,6 +293,9 @@ public class PostService {
                 .orElseThrow(() -> new ErrorException(ErrorCode.USER_NOT_FOUND));
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND));
+        post.getPostStat().incrementCommentCount();
+        postRepository.save(post);
+
         PostComment postComment = PostComment.builder()
                 .user(user)
                 .post(post)
@@ -302,6 +327,10 @@ public class PostService {
                 .orElseThrow(() -> new ErrorException(ErrorCode.USER_NOT_FOUND));
         PostComment postComment = postCommentRepository.findById(commentId)
                 .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND));
+
+        Post post = postComment.getPost();
+        post.getPostStat().decrementCommentCount();
+        postRepository.save(post);
 
         if (!postComment.getUser().getUserId().equals(user.getUserId())) {
             throw new ErrorException(ErrorCode.ACCESS_DENIED);
