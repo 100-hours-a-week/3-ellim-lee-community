@@ -1,8 +1,6 @@
 package gguip1.community.domain.auth.service;
 
 import gguip1.community.domain.auth.dto.AuthRequest;
-import gguip1.community.domain.auth.entity.Session;
-import gguip1.community.domain.auth.repository.SessionRepository;
 import gguip1.community.domain.user.entity.User;
 import gguip1.community.domain.user.repository.UserRepository;
 import gguip1.community.global.session.SessionManager;
@@ -23,7 +21,7 @@ public class AuthService {
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user ID"));
 
         if (BCrypt.checkpw(request.getPassword(), user.getPassword())){
-            return sessionManager.createSession(user.getUserId());
+            return sessionManager.createSession(user.getUserId()).getSessionId();
         } else {
             throw new IllegalArgumentException("Invalid password");
         }
