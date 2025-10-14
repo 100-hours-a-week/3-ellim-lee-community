@@ -1,15 +1,17 @@
 package gguip1.community.domain.user.dto;
 
+import jakarta.validation.constraints.Pattern;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 
-/**
- * 사용자 비밀번호 수정 요청 DTO입니다.
- * Fields:
- *  password - 사용자의 새 비밀번호
- *  password2 - 새 비밀번호 확인
- */
-@Data
+@Getter
+@Builder
+@AllArgsConstructor
 public class UserPasswordUpdateRequest {
-    private String newPassword;
-    private String newPassword2;
+    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\-={}\\[\\]:\";'<>?,./]).{8,20}$",
+            message = "비밀번호는 8자 이상, 20자 이하이며, 대문자, 소문자, 숫자, 특수문자를 각각 최소 1개 포함해야 합니다.") // 정규 표현식: 최소 하나의 대문자, 소문자, 숫자, 특수문자 포함
+    private String password;
+    private String password2;
 }
