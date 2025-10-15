@@ -18,4 +18,6 @@ router.get('/edit/password', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'user-edit-password.html'));
 });
 
+// 로그아웃 라우트 추가 (예: /users/logout)
+
 module.exports = router;
