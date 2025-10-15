@@ -23,6 +23,5 @@ public class UserCreateRequest {
     @Pattern(regexp = "^\\S+$", message = "띄어쓰기를 없애주세요.") // 정규 표현식: 공백 문자가 포함되지 않음
     @Size(max = 30, message = "닉네임은 최대 10자 까지 작성 가능합니다.")
     private String nickname;
-    @Size(max = 255, message = "프로필 이미지 URL은 최대 254자까지 가능합니다.")
-    private String profileImageUrl;
+    private Long profileImageId;
 }

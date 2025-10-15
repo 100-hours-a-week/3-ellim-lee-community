@@ -15,7 +15,7 @@ public class RdbmsSessionManager implements SessionManager{
     private final SessionRepository sessionRepository;
 
     @Override
-    public Session createSession(Integer userId) {
+    public Session createSession(Long userId) {
         UUID sessionId = UUID.randomUUID();
         LocalDateTime now = LocalDateTime.now();
 

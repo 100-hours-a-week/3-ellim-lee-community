@@ -11,7 +11,6 @@ import gguip1.community.domain.post.repository.PostCommentRepository;
 import gguip1.community.domain.post.repository.PostImageRepository;
 import gguip1.community.domain.post.repository.PostLikeRepository;
 import gguip1.community.domain.post.repository.PostRepository;
-import gguip1.community.domain.user.dto.AuthorResponse;
 import gguip1.community.domain.user.entity.User;
 import gguip1.community.domain.user.repository.UserRepository;
 import gguip1.community.global.exception.ErrorCode;
@@ -144,7 +143,7 @@ public class PostService {
                             .imageUrls(imageUrls)
                             .title(post.getTitle())
                             .content(post.getContent())
-                            .author(new AuthorResponse(
+                            .author(new AuthorDto(
                                     user.getNickname(),
                                     profileImageId
                             ))
@@ -189,7 +188,7 @@ public class PostService {
                 .imageUrls(imageUrls)
                 .title(post.getTitle())
                 .content(post.getContent())
-                .author(new AuthorResponse(
+                .author(new AuthorDto(
                         user.getNickname(),
                         profileImageId
                 ))
@@ -276,7 +275,7 @@ public class PostService {
 
                     return PostCommentPageItemResponse.builder()
                             .commentId(comment.getCommentId())
-                            .author(new AuthorResponse(
+                            .author(new AuthorDto(
                                     user.getNickname(),
                                     profileImageId
                             ))

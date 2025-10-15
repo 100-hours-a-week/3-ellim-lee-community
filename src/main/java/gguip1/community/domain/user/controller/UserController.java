@@ -1,14 +1,15 @@
 package gguip1.community.domain.user.controller;
 
 import gguip1.community.domain.auth.entity.Session;
+import gguip1.community.domain.user.dto.UserCreateRequest;
 import gguip1.community.domain.user.dto.UserPasswordUpdateRequest;
-import gguip1.community.domain.user.dto.UserRequest;
 import gguip1.community.domain.user.dto.UserResponse;
 import gguip1.community.domain.user.dto.UserUpdateRequest;
 import gguip1.community.domain.user.service.UserService;
 import gguip1.community.global.annotation.RequireAuth;
 import gguip1.community.global.response.ApiResponse;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +23,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/users")
-    public ResponseEntity<ApiResponse<Void>> createUser(@RequestBody UserRequest request) {
+    public ResponseEntity<ApiResponse<Void>> createUser(@Valid @RequestBody UserCreateRequest request) {
         userService.createUser(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success("Registration successful", null));
     }
@@ -36,7 +37,7 @@ public class UserController {
 
     @RequireAuth
     @GetMapping("/users/{userId}")
-    public ResponseEntity<ApiResponse<UserResponse>> getUser(@PathVariable Integer userId) {
+    public ResponseEntity<ApiResponse<UserResponse>> getUser(@PathVariable Long userId) {
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success("get_user_success", userService.getUser(userId)));
     }
 
@@ -50,7 +51,7 @@ public class UserController {
 
     @RequireAuth
     @PatchMapping("/users/{userId}")
-    public ResponseEntity<ApiResponse<Void>> updateUser(@PathVariable Integer userId, @RequestBody UserUpdateRequest request) {
+    public ResponseEntity<ApiResponse<Void>> updateUser(@PathVariable Long userId, @RequestBody UserUpdateRequest request) {
         userService.updateUser(userId, request);
         return ResponseEntity.noContent().build();
     }
@@ -65,14 +66,14 @@ public class UserController {
 
     @RequireAuth
     @PatchMapping("/users/{userId}/password")
-    public ResponseEntity<ApiResponse<Void>> updateUserPassword(@PathVariable Integer userId, @RequestBody UserPasswordUpdateRequest request) {
+    public ResponseEntity<ApiResponse<Void>> updateUserPassword(@PathVariable Long userId, @RequestBody UserPasswordUpdateRequest request) {
         userService.updateUserPassword(userId, request);
         return ResponseEntity.noContent().build();
     }
 
     @RequireAuth
     @DeleteMapping("/users/{userId}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Integer userId) {
+    public ResponseEntity<Void> deleteUser(@PathVariable Long userId) {
         userService.deleteUser(userId);
         return ResponseEntity.noContent().build();
     }

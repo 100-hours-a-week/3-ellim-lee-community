@@ -6,7 +6,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface SessionManager {
-    Session createSession(Integer userId);
+    Session createSession(Long userId);
     Optional<Session> getValidSession(UUID sessionId);
     void removeSession(UUID sessionId);
     void cleanUpExpiredSessions();

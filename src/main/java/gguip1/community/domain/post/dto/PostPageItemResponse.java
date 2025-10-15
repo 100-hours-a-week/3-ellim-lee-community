@@ -1,6 +1,5 @@
 package gguip1.community.domain.post.dto;
 
-import gguip1.community.domain.user.dto.AuthorResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -28,11 +27,9 @@ public class PostPageItemResponse {
     private List<String> imageUrls;
     private String title;
     private String content;
-    private AuthorResponse author;
+    private AuthorDto author;
     private LocalDateTime createdAt;
     private Integer likeCount;
     private Integer commentCount;
     private Integer viewCount;
-//    private Boolean isAuthor;
-//    private Boolean isLiked;
 }
