@@ -6,7 +6,7 @@ router.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'post-list.html'));
 });
 
-router.get('/create/new', (req, res) => {
+router.get('/create', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'post-create.html'));
 });
 
