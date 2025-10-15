@@ -8,6 +8,7 @@ import gguip1.community.domain.user.dto.UserPasswordUpdateRequest;
 import gguip1.community.domain.user.dto.UserResponse;
 import gguip1.community.domain.user.dto.UserUpdateRequest;
 import gguip1.community.domain.user.entity.User;
+import gguip1.community.domain.user.mapper.UserMapper;
 import gguip1.community.domain.user.repository.UserRepository;
 import gguip1.community.global.exception.ErrorCode;
 import gguip1.community.global.exception.ErrorException;
@@ -21,6 +22,9 @@ import org.springframework.stereotype.Service;
 public class UserService {
     private final UserRepository userRepository;
     private final ImageRepository imageRepository;
+
+    // User <-> User 관련 DTO 상호 변환용 Mapper
+    private final UserMapper userMapper;
 
 //    @Transactional
     public void createUser(UserCreateRequest request) {
@@ -44,14 +48,7 @@ public class UserService {
                     .orElse(null);
         } // 프로필 이미지 설정
 
-        User user = User.builder()
-                .profileImage(profileImage)
-                .email(request.getEmail())
-                .password(encryptedPassword)
-                .nickname(request.getNickname())
-                .build(); // User 엔티티 생성
-
-        userRepository.save(user); // DB에 저장
+        userRepository.save(userMapper.userCreateRequestToUser(request, encryptedPassword, profileImage)); // DB에 저장
     }
 
     public UserResponse getMyInfo(Session session) {
@@ -61,13 +58,7 @@ public class UserService {
     public UserResponse getUser(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ErrorException(ErrorCode.USER_NOT_FOUND));
-
-        return new UserResponse(
-                user.getUserId(),
-                user.getEmail(),
-                user.getNickname(),
-                user.getProfileImage() != null ? user.getProfileImage().getUrl() : null
-        );
+        return userMapper.toResponse(user);
     }
 
     public void updateMyInfo(Session session, UserUpdateRequest request) {
