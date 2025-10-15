@@ -2,8 +2,14 @@ header {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    /* justify-self: center; */
     padding: 0 20px;
     height: 60px;
+}
+
+header .title {
+    font-weight: bold;
+    color: #222;
 }
 
 header .back-btn, header .profile-btn {
