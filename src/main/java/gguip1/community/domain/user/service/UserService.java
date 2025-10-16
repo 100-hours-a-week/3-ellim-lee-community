@@ -14,11 +14,13 @@ import gguip1.community.global.exception.ErrorException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.mindrot.jbcrypt.BCrypt;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
+    private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final ImageRepository imageRepository;
 
@@ -28,7 +30,8 @@ public class UserService {
             throw new ErrorException(ErrorCode.PASSWORD_MISMATCH);
         } // 비밀번호 불일치 확인
 
-        String encryptedPassword = BCrypt.hashpw(request.getPassword(), BCrypt.gensalt());
+        String encodedPassword = passwordEncoder.encode(request.getPassword());
+        // 비밀번호 암호화
 
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new ErrorException(ErrorCode.DUPLICATE_EMAIL);
@@ -47,7 +50,7 @@ public class UserService {
         User user = User.builder()
                 .profileImage(profileImage)
                 .email(request.getEmail())
-                .password(encryptedPassword)
+                .password(encodedPassword)
                 .nickname(request.getNickname())
                 .build(); // User 엔티티 생성
 
