@@ -20,12 +20,14 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class UserService {
-    private final PasswordEncoder passwordEncoder;
+    // Repository
     private final UserRepository userRepository;
     private final ImageRepository imageRepository;
 
     // User <-> User 관련 DTO 상호 변환용 Mapper
     private final UserMapper userMapper;
+    // 비밀번호 암호화 관련
+    private final PasswordEncoder passwordEncoder;
 
 //    @Transactional
     public void createUser(UserCreateRequest request) {
@@ -33,8 +35,7 @@ public class UserService {
             throw new ErrorException(ErrorCode.PASSWORD_MISMATCH);
         } // 비밀번호 불일치 확인
 
-        String encodedPassword = passwordEncoder.encode(request.getPassword());
-        // 비밀번호 암호화
+        String encodedPassword = passwordEncoder.encode(request.getPassword()); // 비밀번호 암호화
 
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new ErrorException(ErrorCode.DUPLICATE_EMAIL);
@@ -50,63 +51,55 @@ public class UserService {
                     .orElse(null);
         } // 프로필 이미지 설정
 
-        userRepository.save(userMapper.userCreateRequestToUser(request, encodedPassword, profileImage)); // DB에 저장
+        userRepository.save(userMapper.fromUserCreateRequest(request, encodedPassword, profileImage)); // DB에 저장
     }
 
-    public UserResponse getMyInfo(Session session) {
-        return getUser(session.getUserId());
-    }
-
+    // users/{userId} (관리자 등 타인) 정보 조회
     public UserResponse getUser(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ErrorException(ErrorCode.USER_NOT_FOUND));
         return userMapper.toResponse(user);
     }
 
-    public void updateMyInfo(Session session, UserUpdateRequest request) {
-        updateUser(session.getUserId(), request);
-    }
-
+    // users/{userId} (관리자 등 타인) 정보 수정
     @Transactional
     public void updateUser(Long userId, UserUpdateRequest request){
-//        User user = userRepository.findById(userId)
-//                .orElseThrow(() -> new ErrorException(ErrorCode.USER_NOT_FOUND));
-//
-//        if (request.getNickname() != null && !request.getNickname().equals(user.getNickname())) {
-//            boolean exists = userRepository.existsByNickname(request.getNickname());
-//            if (exists) {
-//                throw new ErrorException(ErrorCode.DUPLICATE_EMAIL);
-//            }
-//            user.changeNickname(request.getNickname());
-//        }
-//
-//        if (request.getProfileImageId() != null){
-//            Image profileImage = imageRepository.findById(request.getProfileImageId())
-//                    .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND));
-//            user.changeProfileImage(profileImage);
-//        }
-//
-//            userRepository.save(user);
-    }
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ErrorException(ErrorCode.USER_NOT_FOUND));
 
-    public void updateMyPassword(Session session, UserPasswordUpdateRequest request) {
-        updateUserPassword(session.getUserId(), request);
+        Image profileImage = null;
+        if (request.getProfileImageId() != null){
+            profileImage = imageRepository.findById(request.getProfileImageId())
+                    .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND));
+        }
+
+        if (request.getNickname() != null && !request.getNickname().equals(user.getNickname())) {
+            boolean exists = userRepository.existsByNickname(request.getNickname());
+            if (exists) {
+                throw new ErrorException(ErrorCode.DUPLICATE_NICKNAME);
+            }
+        }
+
+        user.updateProfile(profileImage, request.getNickname());
+
+        userRepository.save(user);
     }
 
     @Transactional
     public void updateUserPassword(Long userId, UserPasswordUpdateRequest request){
-//        if (!request.getNewPassword().equals(request.getNewPassword2())){
-//            throw new ErrorException(ErrorCode.PASSWORD_MISMATCH);
-//        }
-//
-//        User user = userRepository.findById(userId)
-//                .orElseThrow(() -> new ErrorException(ErrorCode.USER_NOT_FOUND));
-//
-//        user.changePassword(BCrypt.hashpw(request.getNewPassword(), BCrypt.gensalt()));
-//        userRepository.save(user);
+        if (!request.getNewPassword().equals(request.getNewPassword2())){
+            throw new ErrorException(ErrorCode.PASSWORD_MISMATCH);
+        }
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ErrorException(ErrorCode.USER_NOT_FOUND));
+
+        String encodedPassword = passwordEncoder.encode(request.getNewPassword());
+        user.updatePassword(encodedPassword);
+
+        userRepository.save(user);
     }
 
-    @Transactional
     public void deleteUser(Long userId) {
         if (!userRepository.existsById(userId)) {
             throw new ErrorException(ErrorCode.NOT_FOUND);

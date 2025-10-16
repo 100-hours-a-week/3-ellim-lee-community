@@ -18,6 +18,6 @@ public class CustomUserDetailService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) {
         User user = userRepository.findByEmail(username)
                 .orElseThrow(() -> new ErrorException(ErrorCode.USER_NOT_FOUND));
-        return new CustomUserDetails(user);
+        return new CustomUserDetails(user.getUserId(), user.getEmail(), user.getPassword(), user.getStatus());
     }
 }

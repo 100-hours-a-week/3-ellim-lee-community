@@ -3,7 +3,10 @@ package gguip1.community.domain.auth.service;
 import gguip1.community.domain.auth.dto.AuthRequest;
 import gguip1.community.domain.auth.dto.AuthResponse;
 import gguip1.community.domain.user.entity.User;
+import gguip1.community.domain.user.mapper.UserMapper;
 import gguip1.community.domain.user.repository.UserRepository;
+import gguip1.community.global.exception.ErrorCode;
+import gguip1.community.global.exception.ErrorException;
 import gguip1.community.global.security.CustomUserDetails;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -19,6 +22,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AuthService {
     private final AuthenticationManager authenticationManager;
+    private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
     public AuthResponse login(AuthRequest authRequest, HttpServletRequest httpServletRequest) {
         Authentication authentication = authenticationManager.authenticate(
@@ -37,13 +42,10 @@ public class AuthService {
         );
 
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        User user = userDetails.user();
+        User user = userRepository.findById(userDetails.getUserId())
+                .orElseThrow(() -> new ErrorException(ErrorCode.USER_NOT_FOUND));
 
-        return AuthResponse.builder()
-                .email(user.getEmail())
-                .nickname(user.getNickname())
-                .profileImageUrl(user.getProfileImage() != null ? user.getProfileImage().getUrl() : null)
-                .build();
+        return userMapper.toAuthResponse(user);
     }
 
     public void logout(HttpServletRequest request) {

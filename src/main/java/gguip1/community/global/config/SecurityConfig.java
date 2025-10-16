@@ -9,10 +9,12 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
 @Configuration
@@ -25,15 +27,21 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf
-                    .ignoringRequestMatchers("/auth", "/users")
-                    // .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                    /*
-                     * Spring Security CSRF 설정
-                     * - /auth, /users 경로는 CSRF 보호에서 제외
-                     * - 로그인과 회원가입 요청은 CSRF 토큰 없이 허용
-                     */
-            )
+//            .csrf(csrf -> csrf
+//                    .ignoringRequestMatchers("/auth", "/users")
+//                     .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+//                    /*t
+//                     * Spring Security CSRF 설정
+//                     * - /auth, /users 경로는 CSRF 보호에서 제외
+//                     * - 로그인과 회원가입 요청은 CSRF 토큰 없이 허용
+//                     */
+//            )
+            .csrf(AbstractHttpConfigurer::disable)
+            /*
+             * CSRF 보호 비활성화
+             * - RESTful API 서버에서는 일반적으로 CSRF 보호가 필요하지 않음
+             * - 클라이언트가 CSRF 토큰을 관리하지 않아도 됨
+             */
             .authorizeHttpRequests(auth -> auth
                     .requestMatchers("/auth", "/users").permitAll()
                     .anyRequest().authenticated()

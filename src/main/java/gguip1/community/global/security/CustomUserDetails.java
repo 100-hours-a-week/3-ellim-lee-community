@@ -1,6 +1,8 @@
 package gguip1.community.global.security;
 
 import gguip1.community.domain.user.entity.User;
+import lombok.Builder;
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -8,10 +10,16 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.Collections;
 
-public record CustomUserDetails(User user) implements UserDetails {
+@Getter
+@Builder
+public class CustomUserDetails implements UserDetails {
     /*
      * Custom User를 사용하기 때문에 Spring Security의 UserDetails를 구현
      */
+    private final Long userId;
+    private final String email;
+    private final String password;
+    private final int status; // 0: active, 1: inactive
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -20,12 +28,12 @@ public record CustomUserDetails(User user) implements UserDetails {
 
     @Override
     public String getPassword() {
-        return user.getPassword();
+        return password;
     }
 
     @Override
     public String getUsername() {
-        return user.getEmail();
+        return email;
     }
 
     @Override
@@ -45,6 +53,6 @@ public record CustomUserDetails(User user) implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return user.getStatus() == 0;
+        return status == 0;
     }
 }
