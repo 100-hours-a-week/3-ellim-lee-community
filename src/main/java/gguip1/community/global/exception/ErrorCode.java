@@ -14,6 +14,7 @@ public enum ErrorCode {
     INVALID_CREDENTIALS(HttpStatus.UNAUTHORIZED, "INVALID_CREDENTIALS", "인증 정보가 올바르지 않습니다."),
     PASSWORD_MISMATCH(HttpStatus.UNAUTHORIZED, "PASSWORD_MISMATCH","비밀번호가 일치하지 않습니다."),
     USER_NOT_FOUND(HttpStatus.UNAUTHORIZED, "USER_NOT_FOUND","사용자를 찾을 수 없습니다."),
+    SESSION_EXPIRED(HttpStatus.UNAUTHORIZED, "SESSION_EXPIRED", "세션이 만료되었습니다. 다시 로그인해주세요."),
 
     // 403
     ACCESS_DENIED(HttpStatus.FORBIDDEN, "ACCESS_DENIED","접근이 권한이 없습니다."),

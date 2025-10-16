@@ -3,7 +3,6 @@ package gguip1.community.domain.post.controller;
 import gguip1.community.domain.auth.entity.Session;
 import gguip1.community.domain.post.dto.*;
 import gguip1.community.domain.post.service.PostService;
-import gguip1.community.global.annotation.RequireAuth;
 import gguip1.community.global.response.ApiResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +17,6 @@ import java.util.Optional;
 public class PostController {
     private final PostService postService;
 
-    @RequireAuth
     @PostMapping("/posts")
     public ResponseEntity<ApiResponse<Void>> createPost(@RequestBody PostRequest postRequest, HttpServletRequest request) {
         Session session = (Session) request.getAttribute("session");
@@ -38,7 +36,6 @@ public class PostController {
         );
     }
 
-    @RequireAuth
     @GetMapping("/posts/{postId}")
     public ResponseEntity<ApiResponse<PostDetailResponse>> getPost(@PathVariable Long postId, HttpServletRequest request) {
         Session session = (Session) request.getAttribute("session");
@@ -47,7 +44,6 @@ public class PostController {
         );
     }
 
-    @RequireAuth
     @PatchMapping("/posts/{postId}")
     public ResponseEntity<ApiResponse<Void>> updatePost(@PathVariable Long postId, @RequestBody PostUpdateRequest postUpdateRequest, HttpServletRequest request) {
         Session session = (Session) request.getAttribute("session");
@@ -55,7 +51,6 @@ public class PostController {
         return ResponseEntity.ok(ApiResponse.success("Post updated", null));
     }
 
-    @RequireAuth
     @DeleteMapping("/posts/{postId}")
     public ResponseEntity<ApiResponse<Void>> deletePost(@PathVariable Long postId, HttpServletRequest request) {
         Session session = (Session) request.getAttribute("session");
@@ -63,7 +58,6 @@ public class PostController {
         return ResponseEntity.noContent().build();
     }
 
-    @RequireAuth
     @PostMapping("/posts/{postId}/like")
     public ResponseEntity<ApiResponse<Void>> likePost(@PathVariable Long postId, HttpServletRequest request) {
         Session session = (Session) request.getAttribute("session");
@@ -71,7 +65,6 @@ public class PostController {
         return ResponseEntity.noContent().build();
     }
 
-    @RequireAuth
     @DeleteMapping("/posts/{postId}/like")
     public ResponseEntity<ApiResponse<Void>> unlikePost(@PathVariable Long postId, HttpServletRequest request) {
         Session session = (Session) request.getAttribute("session");
@@ -79,7 +72,6 @@ public class PostController {
         return ResponseEntity.noContent().build();
     }
 
-    @RequireAuth
     @GetMapping("/posts/{postId}/comments")
     public ResponseEntity<ApiResponse<PostCommentPageResponse>> getComments(@PathVariable Long postId,
                                                                         @RequestParam(required = false) Long lastCommentId,
@@ -90,7 +82,6 @@ public class PostController {
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success("Comments retrieved successfully", response));
     }
 
-    @RequireAuth
     @PostMapping("/posts/{postId}/comments")
     public ResponseEntity<ApiResponse<Void>> createComment(@PathVariable Long postId, @RequestBody PostCommentRequest postCommentRequest, HttpServletRequest request) {
         Session session = (Session) request.getAttribute("session");
@@ -98,7 +89,6 @@ public class PostController {
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success("Comment created", null));
     }
 
-    @RequireAuth
     @PatchMapping("/posts/{postId}/comments/{commentId}")
     public ResponseEntity<ApiResponse<Void>> updateComment(@PathVariable Long postId, @PathVariable Long commentId, @RequestBody PostCommentRequest postCommentRequest, HttpServletRequest request) {
         Session session = (Session) request.getAttribute("session");
@@ -106,7 +96,6 @@ public class PostController {
         return ResponseEntity.noContent().build();
     }
 
-    @RequireAuth
     @DeleteMapping("/posts/{postId}/comments/{commentId}")
     public ResponseEntity<ApiResponse<Void>> deleteComment(@PathVariable Long postId, @PathVariable Long commentId, HttpServletRequest request) {
         Session session = (Session) request.getAttribute("session");

@@ -1,35 +1,57 @@
 package gguip1.community.domain.auth.service;
 
 import gguip1.community.domain.auth.dto.AuthRequest;
+import gguip1.community.domain.auth.dto.AuthResponse;
 import gguip1.community.domain.user.entity.User;
 import gguip1.community.domain.user.repository.UserRepository;
-import gguip1.community.global.exception.ErrorCode;
-import gguip1.community.global.exception.ErrorException;
-import gguip1.community.global.session.SessionManager;
+import gguip1.community.global.security.CustomUserDetails;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.mindrot.jbcrypt.BCrypt;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Service;
-
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class AuthService {
-    private final SessionManager sessionManager;
-    private final UserRepository userRepository;
+    private final AuthenticationManager authenticationManager;
 
-    public UUID login(AuthRequest request){
-        User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new ErrorException(ErrorCode.USER_NOT_FOUND));
+    public AuthResponse login(AuthRequest authRequest, HttpServletRequest httpServletRequest) {
+        Authentication authentication = authenticationManager.authenticate(
+            new UsernamePasswordAuthenticationToken(
+                    authRequest.getEmail(),
+                    authRequest.getPassword()
+            )
+        );
 
-        if (BCrypt.checkpw(request.getPassword(), user.getPassword())){
-            return sessionManager.createSession(user.getUserId()).getSessionId();
-        } else {
-            throw new ErrorException(ErrorCode.PASSWORD_MISMATCH);
-        }
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        HttpSession session = httpServletRequest.getSession(true);
+        session.setAttribute(
+                HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
+                SecurityContextHolder.getContext()
+        );
+
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        User user = userDetails.user();
+
+        return AuthResponse.builder()
+                .email(user.getEmail())
+                .nickname(user.getNickname())
+                .profileImageUrl(user.getProfileImage() != null ? user.getProfileImage().getUrl() : null)
+                .build();
     }
 
-    public void logout(UUID sessionId){
-        sessionManager.removeSession(sessionId);
+    public void logout(HttpServletRequest request) {
+        SecurityContextHolder.clearContext();
+
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
     }
 }
