@@ -1,12 +1,23 @@
+import { initDropdown } from './dropdown.js';
+
+
 function loadHeader(){
-    fetch('/components/header.html')
+    return fetch('/components/header.html')
         .then(response => response.text())
         .then(data => {
-            document.querySelector('header').innerHTML = data;
-            const dropdownScript = document.createElement('script');
-            dropdownScript.src = '/js/dropdown.js';
-            document.body.appendChild(dropdownScript);
+            document.querySelector('header').outerHTML = data;
         });
-}
+} // Code Editor가 async를 추천하는데 왜 그런지는 잘 모르겠음
 
-loadHeader();
+// async function loadHeader(){
+//     const response = await fetch('/components/header.html');
+//     const data = await response.text();
+//     document.querySelector('header').outerHTML = data;
+// }
+
+document.addEventListener('DOMContentLoaded', () => {
+    loadHeader().
+        then(() => {
+            initDropdown('.profile-btn', '.profile-dropdown');
+        });
+});

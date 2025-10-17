@@ -1,6 +1,8 @@
-const profileBtn = document.querySelector('.profile-btn');
-const profileDropdown = document.querySelector('.profile-dropdown');
+export function initDropdown(buttonSelector, dropdownSelector) {
+    const profileBtn = document.querySelector(buttonSelector);
+    const profileDropdown = document.querySelector(dropdownSelector);
 
-profileBtn.addEventListener('click', () => {
-    profileDropdown.classList.toggle('show');
-});
+    profileBtn.addEventListener('click', () => {
+        profileDropdown.classList.toggle('show');
+    });
+}
