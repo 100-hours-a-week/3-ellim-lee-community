@@ -1,17 +1,17 @@
 import { apiRequest } from "./base.js";
 
 export const UserAPI = {
-    signin: (email, password) => 
+    signIn: (email, password) => 
         apiRequest('/auth', {
             method: 'POST',
             body: JSON.stringify({ email, password }),
         }),
-    signup: (email, password, password2, nickname, image_id) =>
+    signUp: (email, password, password2, nickname, profileImageId) =>
         apiRequest('/users', {
             method: 'POST',
-            body: JSON.stringify({ email, password, password2, nickname, image_id: image_id ?? null }),
+            body: JSON.stringify({ email, password, password2, nickname, profileImageId: profileImageId ?? null }),
         }),
-    signout: () => 
+    signOut: () => 
         apiRequest('/auth', { 
             method: 'DELETE' 
         }),
@@ -26,7 +26,7 @@ export const UserAPI = {
     updateCurrentUser: (nickname, profileImageId) => {
             const body = {};
             if (nickname !== undefined && nickname !== null) body.nickname = nickname;
-            if (profileImageId !== undefined && profileImageId !== null) body.image_id = profileImageId;
+            if (profileImageId !== undefined && profileImageId !== null) body.profileImageId = profileImageId;
 
             return apiRequest('/users/me', {
                 method: 'PATCH',

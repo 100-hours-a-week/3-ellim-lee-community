@@ -2,15 +2,22 @@ const API_BASE_URL = 'http://localhost:8080';
 
 export async function apiRequest(endpoint, options = {}) {
     const url = `${API_BASE_URL}${endpoint}`;
-    const defaultHeaders = {
-        'Content-Type': 'application/json',
-        ...(options.headers || {}),
+
+    const defaultHeaders = {};
+
+    if (!(options.body instanceof FormData)) {
+        defaultHeaders['Content-Type'] = 'application/json';
     }
+
+    const headers = {
+        ...defaultHeaders,
+        ...(options.headers || {}),
+    };
 
     try {
         const response = await fetch(url, {
             method: options.method || 'GET',
-            headers: defaultHeaders,
+            headers: headers,
             body: options.body,
             credentials: 'include',
         });
