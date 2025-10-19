@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/css/components/header.css">
+</head>
+<body>
+    <header></header>
+    <hr>
+    <section class="post-create-section">
+        <h2>게시글 작성</h2>
+        <form id="post-create-form">
+            <label for="title">제목*</label>
+            <input type="text" id="title" name="title" placeholder="제목을 입력하세요." required>
+            <br>
+            <label for="content">내용*</label>
+            <textarea id="content" name="content" placeholder="내용을 입력하세요." required></textarea>
+            <p class="hidden-text">* hidden text</p>
+            <br>
+            <label for="images">이미지</label>
+            <input type="file" id="postImages" name="postImages" accept="image/*" multiple>
+            <br>
+            <button type="submit">완료</button>
+        </form>
+    </section>
+    <script type="module" src="/pages/posts/js/postCreateApi.js"></script>
+    <script type="module" src="/js/ui/header.js"></script>
+</body>
+</html>
