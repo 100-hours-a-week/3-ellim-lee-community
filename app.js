@@ -6,10 +6,10 @@ const port = 3000;
 app.use(express.static(Path.join(__dirname, 'public')));
 app.use('/assets', express.static(Path.join(__dirname, 'assets')));
 
-const postRouter = require('./public/pages/post/js/postRoutes');
+const postRouter = require('./public/pages/posts/js/postRoutes');
 app.use('/posts', postRouter);
 
-const userRouter = require('./public/pages/user/js/userRouter');
+const userRouter = require('./public/pages/users/js/userRouter');
 app.use('/users', userRouter);
 
 app.listen(port, () => {
