@@ -38,6 +38,7 @@ async function fetchPosts() {
         const { posts, lastPostId: newLastPostId, hasNext: newHasNext } = response.data;
         console.log(response);
         const processedPosts = posts.map(post => ({
+            postId : post.postId,
             title : post.title,
             content : post.content,
             profileImageUrl : post.profileImageUrl ?? '/assets/imgs/profile_icon.svg',
