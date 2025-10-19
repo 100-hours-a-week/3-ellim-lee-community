@@ -34,10 +34,17 @@ export const PostAPI = {
         apiRequest(`/posts/${postId}`, {
             method: 'DELETE',
         }),
-    getCommentsOnPost: (postId, lastCommentId, size) =>
-        apiRequest(`/posts/${postId}/comments?lastCommentId=${lastCommentId}&size=${size}`, {
-            method: 'GET',
-        }),
+    getCommentsOnPost: (postId, lastCommentId, size) => {
+        if (lastCommentId === undefined || lastCommentId === null) {
+            return apiRequest(`/posts/${postId}/comments?size=${size}`, {
+                method: 'GET',
+            });
+        } else {
+            return apiRequest(`/posts/${postId}/comments?lastCommentId=${lastCommentId}&size=${size}`, {
+                method: 'GET',
+            });
+        }
+    },
     createCommentOnPost: (postId, content) => 
         apiRequest(`/posts/${postId}/comments`, {
             method: 'POST',

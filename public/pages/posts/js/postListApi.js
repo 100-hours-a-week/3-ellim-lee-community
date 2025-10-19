@@ -9,7 +9,7 @@ let lastPostId = null;
 let postTemplate = null;
 
 async function loadPosts() {
-    const response = await fetch("pages/posts/components/postItem.html");
+    const response = await fetch("/pages/posts/components/postItem.html");
     postTemplate = await response.text();
 }
 
@@ -36,7 +36,6 @@ async function fetchPosts() {
     try {
         const response = await PostAPI.getPosts(lastPostId);
         const { posts, lastPostId: newLastPostId, hasNext: newHasNext } = response.data;
-        console.log(response);
         const processedPosts = posts.map(post => ({
             postId : post.postId,
             title : post.title,
