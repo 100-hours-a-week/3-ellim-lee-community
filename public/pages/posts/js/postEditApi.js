@@ -1,14 +1,16 @@
 import { PostAPI } from "/js/api/posts.js";
+import { ImageAPI } from "/js/api/images.js";
 
 const pathParts = window.location.pathname.split('/');
 const postId = pathParts[pathParts.length - 1];
 
 /** 게시물 수정 API 호출 및 데이터 처리 시작 */
-const postUpdateForm = document.getElementById("post-edit-form");
 
-postUpdateForm.addEventListener("submit", async (event) => {
+const postEditForm = document.getElementById("post-edit-form");
+
+postEditForm.addEventListener("submit", async (event) => {
     event.preventDefault();
-    const formData = new FormData(postUpdateForm);
+    const formData = new FormData(postEditForm);
     const title = formData.get("title");
     const content = formData.get("content");
     const imageFiles = formData.getAll("postImages");
@@ -39,6 +41,10 @@ postUpdateForm.addEventListener("submit", async (event) => {
     }
 });
 
+/** 게시물 수정 API 호출 및 데이터 처리 끝 */
+
+/** 게시물 데이터 불러오기 시작 */
+
 async function populatePostData() {
     try {
         const response = await PostAPI.getPostById(postId);
@@ -52,10 +58,10 @@ async function populatePostData() {
          * HTML이 먼저 로드되기 때문에 placeholder가 먼저 보이고 내용이 채워지는 현상을 막기 위해
          * 데이터를 불러온 후에 폼을 보이도록 처리함
          */
-        postUpdateForm.style.display = "block";
+        postEditForm.style.display = "block";
     }
 }  
 
 populatePostData();
 
-/** 게시물 수정 API 호출 및 데이터 처리 끝 */
+/** 게시물 데이터 불러오기 끝 */
