@@ -1,0 +1,16 @@
+<article class="post-item">
+    <h2 class="post-title">{{title}}</h2>
+    <img class="post-profile-image" src="{{profileImageUrl}}" alt="{{author}}">
+    <p class="post-author">작성자: {{author}}</p>
+    <p class="post-date">작성일: {{date}}</p>
+    <button class="update-post" data-post-id="{{postId}}">수정</button>
+    <button class="delete-post" data-post-id="{{postId}}">삭제</button>
+    <hr>
+    <div class="post-images"></div>
+    <p class="post-content">{{content}}</p>
+    <button class="post-likes">
+        ❤️ 좋아요 <span class="count">{{likes}}</span>
+    </button>
+    <p class="post-views">조회수: {{views}}</p>
+    <p class="post-comments">댓글수: {{comments}}</p>
+</article>
