@@ -16,7 +16,7 @@ export const PostAPI = {
         apiRequest(`/posts/${postId}`, {
             method: 'GET',
         }),
-    createPost: ({title, content, imageIds}) => {
+    createPost: (title, content, imageIds) => {
         const body = { title, content };
         if (imageIds !== undefined && imageIds !== null) body.imageIds = imageIds;
 

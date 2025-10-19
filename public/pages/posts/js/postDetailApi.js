@@ -43,7 +43,7 @@ async function fetchPostDetail(postId) {
         const processedPost = {
             postId : postIdFromPath,
             title : post.title,
-            postImageUrls : post.postImageUrls ?? [],
+            postImageUrls : post.imageUrls ?? [],
             content : post.content,
             profileImageUrl : post.profileImageUrl ?? '/assets/imgs/profile_icon.svg',
             author : post.author.nickname,
@@ -74,7 +74,7 @@ async function fetchPostDetail(postId) {
             imageContainer.style.display = 'none';
         }
 
-        postDetailElement.innerHTML = postHTML;
+        postDetailElement.innerHTML = tempDiv.innerHTML;
     } catch (error) {
         console.error("게시물 상세 불러오기 실패:", error);
     } finally {
