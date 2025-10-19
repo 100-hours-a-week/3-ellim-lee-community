@@ -54,8 +54,10 @@ header .profile-dropdown.show {
     pointer-events: auto;
 }
 
-header .profile-dropdown-item a {
-    display: block;
+header .profile-dropdown-item a, header .profile-dropdown-item button {
+    all: unset;
+    cursor: pointer;
+    display: flex;
     padding: 10px 20px;
     text-decoration: none;
     color: #222;
@@ -68,16 +70,20 @@ header .profile-dropdown-item a {
 }
 
 header .profile-dropdown-item a:hover,
-header .profile-dropdown-item a:focus {
+header .profile-dropdown-item a:focus-visible,
+header .profile-dropdown-item button:hover,
+header .profile-dropdown-item button:focus-visible {
     background-color: rgba(33, 150, 243, 0.06);
     color: #0b63c5;
     transform: translateX(4px);
     outline: none;
 }
 
-header .profile-dropdown-item:first-child a {
+header .profile-dropdown-item:first-child a,
+header .profile-dropdown-item:first-child button {
     margin-top: 6px;
 }
-header .profile-dropdown-item:last-child a {
+header .profile-dropdown-item:last-child a,
+header .profile-dropdown-item:last-child button {
     margin-bottom: 6px;
 }
