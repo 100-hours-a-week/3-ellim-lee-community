@@ -2,15 +2,13 @@ package gguip1.community.domain.auth.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 
-/**
- * 로그인 요청 DTO입니다.
- * Fields:
- *  email - 사용자의 이메일
- *  password - 사용자의 비밀번호
- */
-@Data
+
+@Getter
+@AllArgsConstructor
 public class AuthRequest {
     @Email
     @NotBlank

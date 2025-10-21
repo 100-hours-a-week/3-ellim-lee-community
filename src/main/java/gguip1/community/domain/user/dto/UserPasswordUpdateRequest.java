@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.Getter;
 
 @Getter
-@Builder
 @AllArgsConstructor
 public class UserPasswordUpdateRequest {
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\-={}\\[\\]:\";'<>?,./]).{8,20}$",

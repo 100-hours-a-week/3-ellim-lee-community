@@ -45,13 +45,7 @@ class UserServiceTest {
          */
 
         // given
-        UserCreateRequest userCreateRequest = UserCreateRequest
-                .builder()
-                .email("test@test.com")
-                .nickname("test1")
-                .password("test1234")
-                .password2("test1234")
-                .build();
+        UserCreateRequest userCreateRequest = new UserCreateRequest("test@test.com", "test1234", "test1234", "test1", null);
 
         User mockUser = User.builder()
                 .email("test@test.com")
@@ -79,13 +73,7 @@ class UserServiceTest {
     @Test
     void signUpFailPasswordMismatch(){
         // given
-        UserCreateRequest userCreateRequest = UserCreateRequest
-                .builder()
-                .email("test@test.com")
-                .nickname("test1")
-                .password("test1234")
-                .password2("diff1234")
-                .build();
+        UserCreateRequest userCreateRequest = new UserCreateRequest("test@test.com", "test1234", "diff1234", "test1", null);
 
         // when
         ErrorException exception = assertThrows(ErrorException.class,

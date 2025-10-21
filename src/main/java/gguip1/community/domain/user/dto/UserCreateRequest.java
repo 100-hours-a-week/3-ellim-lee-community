@@ -7,7 +7,6 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 
 @Getter
-@Builder
 @AllArgsConstructor
 public class UserCreateRequest {
     @Email(message = "올바른 이메일 주소 형식을 입력해주세요.")
