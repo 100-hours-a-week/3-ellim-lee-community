@@ -25,7 +25,7 @@ public class AuthService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
-    public AuthResponse login(AuthRequest authRequest, HttpServletRequest httpServletRequest) {
+    public AuthResponse login(AuthRequest authRequest) {
         Authentication authentication = authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(
                     authRequest.getEmail(),
@@ -35,12 +35,6 @@ public class AuthService {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        HttpSession session = httpServletRequest.getSession(true);
-        session.setAttribute(
-                HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
-                SecurityContextHolder.getContext()
-        );
-
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         User user = userRepository.findById(userDetails.getUserId())
                 .orElseThrow(() -> new ErrorException(ErrorCode.USER_NOT_FOUND));
@@ -48,12 +42,6 @@ public class AuthService {
         return userMapper.toAuthResponse(user);
     }
 
-    public void logout(HttpServletRequest request) {
-        SecurityContextHolder.clearContext();
-
-        HttpSession session = request.getSession(false);
-        if (session != null) {
-            session.invalidate();
-        }
+    public void logout() {
     }
 }

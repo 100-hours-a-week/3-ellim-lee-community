@@ -7,9 +7,13 @@ import gguip1.community.global.response.ApiResponse;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -18,9 +22,18 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/auth")
-    public ResponseEntity<ApiResponse<AuthResponse>> login(@RequestBody AuthRequest request,
+    public ResponseEntity<ApiResponse<AuthResponse>> login(@RequestBody AuthRequest authRequest,
                                                            HttpServletRequest httpRequest) {
-        AuthResponse authResponse = authService.login(request, httpRequest);
+        AuthResponse authResponse = authService.login(authRequest);
+
+        /*
+         * 테스트해보고 이상 없으면 지워주세요.
+         */
+//        HttpSession session = httpRequest.getSession(true);
+//        session.setAttribute(
+//                HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
+//                SecurityContextHolder.getContext()
+//        );
 
         return ResponseEntity.status(HttpStatus.OK).body(
                 ApiResponse.success("login_success", authResponse)
@@ -30,7 +43,12 @@ public class AuthController {
     @DeleteMapping("/auth")
     public ResponseEntity<ApiResponse<Void>> logout(HttpServletRequest httpRequest,
                                                     HttpServletResponse httpResponse) {
-        authService.logout(httpRequest);
+        SecurityContextHolder.clearContext();
+
+        HttpSession session = httpRequest.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
 
         Cookie cookie = new Cookie("JSESSIONID", null);
         cookie.setPath("/");
