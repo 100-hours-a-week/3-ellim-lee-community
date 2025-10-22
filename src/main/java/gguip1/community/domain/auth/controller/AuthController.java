@@ -22,7 +22,7 @@ public class AuthController {
     @PostMapping("/auth")
     public ResponseEntity<ApiResponse<AuthResponse>> login(@RequestBody AuthRequest authRequest,
                                                            HttpServletRequest httpRequest) {
-        AuthResponse authResponse = authService.login(authRequest);
+        AuthResponse authResponse = authService.login(authRequest, httpRequest);
 
         /*
          * 테스트해보고 이상 없으면 지워주세요.
