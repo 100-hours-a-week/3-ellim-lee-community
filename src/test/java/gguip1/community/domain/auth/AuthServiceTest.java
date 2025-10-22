@@ -30,9 +30,10 @@ public class AuthServiceTest {
     @Test
     void loginSuccess(){
         //given
-        AuthRequest authRequest = new AuthRequest();
-        authRequest.setEmail("test@test.com");
-        authRequest.setPassword("test1234");
+        AuthRequest authRequest = AuthRequest.builder().
+                email("test@test.com").
+                password("test1234").
+                build();
 
         //when
 

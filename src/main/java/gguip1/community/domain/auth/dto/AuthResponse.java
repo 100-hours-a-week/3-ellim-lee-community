@@ -8,8 +8,8 @@ import lombok.Getter;
 @Builder
 @AllArgsConstructor
 public class AuthResponse {
-    private Long userId;
-    private String email;
-    private String profileImageUrl;
-    private String nickname;
+    private final Long userId;
+    private final String email;
+    private final String profileImageUrl;
+    private final String nickname;
 }
