@@ -30,10 +30,10 @@ public class AuthServiceTest {
     @Test
     void loginSuccess(){
         //given
-        AuthRequest authRequest = AuthRequest.builder().
-                email("test@test.com").
-                password("test1234").
-                build();
+//        AuthRequest authRequest = AuthRequest.builder().
+//                email("test@test.com").
+//                password("test1234").
+//                build();
 
         //when
 
