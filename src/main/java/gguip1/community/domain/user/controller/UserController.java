@@ -7,6 +7,10 @@ import gguip1.community.domain.user.dto.UserUpdateRequest;
 import gguip1.community.domain.user.service.UserService;
 import gguip1.community.global.response.ApiResponse;
 import gguip1.community.global.security.CustomUserDetails;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -36,7 +40,8 @@ public class UserController {
     }
 
     @PatchMapping("/users/me")
-    public ResponseEntity<ApiResponse<Void>> updateMyInfo(@AuthenticationPrincipal CustomUserDetails user, @Valid @RequestBody UserUpdateRequest requestBody) {
+    public ResponseEntity<ApiResponse<Void>> updateMyInfo(@AuthenticationPrincipal CustomUserDetails user,
+                                                          @Valid @RequestBody UserUpdateRequest requestBody) {
         userService.updateUser(user.getUserId(), requestBody);
         return ResponseEntity.noContent().build();
     }
@@ -56,8 +61,22 @@ public class UserController {
 //    }
 
     @PatchMapping("/users/me/password")
-    public ResponseEntity<ApiResponse<Void>> updateMyPassword(@AuthenticationPrincipal CustomUserDetails user, @Valid @RequestBody UserPasswordUpdateRequest requestBody) {
+    public ResponseEntity<ApiResponse<Void>> updateMyPassword(@AuthenticationPrincipal CustomUserDetails user,
+                                                              @Valid @RequestBody UserPasswordUpdateRequest requestBody,
+                                                              HttpServletRequest httpRequest,
+                                                              HttpServletResponse httpResponse) {
         userService.updateUserPassword(user.getUserId(), requestBody);
+
+        HttpSession session = httpRequest.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
+
+        Cookie cookie = new Cookie("JSESSIONID", null);
+        cookie.setPath("/");
+        cookie.setMaxAge(0);
+        httpResponse.addCookie(cookie);
+
         return ResponseEntity.noContent().build();
     }
 
@@ -76,8 +95,21 @@ public class UserController {
 //    }
 
     @DeleteMapping("/users/me")
-    public ResponseEntity<Void> deleteMyAccount(@AuthenticationPrincipal CustomUserDetails user) {
+    public ResponseEntity<Void> deleteMyAccount(@AuthenticationPrincipal CustomUserDetails user,
+                                                HttpServletRequest httpRequest,
+                                                HttpServletResponse httpResponse) {
         userService.deleteUser(user.getUserId());
+
+        HttpSession session = httpRequest.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
+
+        Cookie cookie = new Cookie("JSESSIONID", null);
+        cookie.setPath("/");
+        cookie.setMaxAge(0);
+        httpResponse.addCookie(cookie);
+
         return ResponseEntity.noContent().build();
     }
 

@@ -11,10 +11,10 @@ import java.time.LocalDateTime;
 public class SoftDeleteEntity extends BaseEntity{
 
     @Column(name = "status", nullable = false)
-    private Byte status = 0;
+    protected Byte status = 0;
 
     @Column(name = "deleted_at")
-    private LocalDateTime deletedAt;
+    protected LocalDateTime deletedAt;
 
     public void softDelete() {
         this.status = 1;

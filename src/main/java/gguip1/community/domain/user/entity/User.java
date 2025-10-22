@@ -51,4 +51,15 @@ public class User extends SoftDeleteEntity {
     public void updatePassword(String password){
         this.password = password;
     }
+
+    @Override
+    public void softDelete(){
+        this.status = 1;
+        this.deletedAt = LocalDateTime.now();
+        this.email += "_deleted";
+
+//        this.nickname += "_deleted";
+    }
+
+    // 복구에 대한 고려
 }

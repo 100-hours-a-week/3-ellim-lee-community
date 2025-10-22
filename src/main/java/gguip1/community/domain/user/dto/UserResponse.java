@@ -1,15 +1,7 @@
 package gguip1.community.domain.user.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
 
-@Getter
 @Builder
-@AllArgsConstructor
-public class UserResponse {
-    private Long userId;
-    private String email;
-    private String profileImageUrl;
-    private String nickname;
+public record UserResponse(Long userId, String email, String profileImageUrl, String nickname) {
 }
