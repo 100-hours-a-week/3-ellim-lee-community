@@ -1,5 +1,10 @@
 import { PostAPI } from "/js/api/posts.js";
 
+const postCreateButton = document.querySelector(".post-create-button");
+postCreateButton.addEventListener("click", () => {
+    window.location.href = "/posts/create";
+});
+
 const postListElement = document.querySelector(".post-list");
 const triggerElement = document.querySelector(".scroll-trigger");
 
