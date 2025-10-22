@@ -8,8 +8,6 @@ import lombok.*;
 @Entity
 @Table(name = "post_images")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
-@Builder
 @Getter
 public class PostImage {
     @EmbeddedId

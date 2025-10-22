@@ -6,10 +6,7 @@ import lombok.*;
 @Entity
 @Table(name = "posts_stats")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
-@Builder
 @Getter
-@Setter
 public class PostStat {
     @Id
     @Column(name = "post_id")
