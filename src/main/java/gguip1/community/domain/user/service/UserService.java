@@ -105,7 +105,5 @@ public class UserService {
         user.softDelete();
 
         userRepository.save(user);
-
-
     }
 }

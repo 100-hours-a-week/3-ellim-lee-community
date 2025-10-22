@@ -27,4 +27,16 @@ public class PostComment extends SoftDeleteEntity {
 
     @Column(name = "content", nullable = false, columnDefinition = "TEXT")
     private String content;
+
+    @Builder
+    public PostComment(Long commentId, User user, Post post, String content){
+        this.commentId = commentId;
+        this.user = user;
+        this.post = post;
+        this.content = content;
+    }
+
+    public void updateComment(String content){
+        this.content = content;
+    }
 }

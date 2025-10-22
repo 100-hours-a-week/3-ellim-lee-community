@@ -25,4 +25,12 @@ public class PostImage {
 
     @Column(name = "image_order", nullable = false)
     private Byte imageOrder;
+
+    @Builder
+    public PostImage(PostImageId postImageId, Post post, Image image, byte imageOrder){
+        this.postImageId = postImageId;
+        this.post = post;
+        this.image = image;
+        this.imageOrder = imageOrder;
+    }
 }
