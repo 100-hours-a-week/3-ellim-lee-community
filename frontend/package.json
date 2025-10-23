@@ -1,0 +1,24 @@
+{
+  "name": "community-fe",
+  "version": "1.0.0",
+  "description": "3-ellim-community-fe",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gguip1/community-fe.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gguip1/community-fe/issues"
+  },
+  "homepage": "https://github.com/gguip1/community-fe#readme",
+  "dependencies": {
+    "bootstrap": "^5.3.8",
+    "express": "^5.1.0"
+  }
+}

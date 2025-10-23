@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/css/components/header.css">
+</head>
+<body>
+    <header></header>
+    <hr>
+    <section class ="user-edit-section">
+        <h2>회원 정보 수정</h2>
+        <form id="user-edit-form" style="display: none;">
+            <label for="profileImage">프로필 사진*</label>
+            <input type="file" id="profileImage" name="profileImage" accept="image/*">
+            <br>
+            <label for="nickname">닉네임</label>
+            <input type="text" id="nickname" name="nickname" placeholder="닉네임을 입력하세요." required>
+            <p class="hidden-text">* hidden text</p>
+            <br>
+            <button type="submit">수정하기</button>
+        </form>
+        <button id="user-delete-button">회원 탈퇴</button>
+    </section>
+    <script type="module" src="/pages/users/js/userEditApi.js"></script>
+    <script type="module" src="/js/ui/header.js"></script>
+</body>
+</html>
