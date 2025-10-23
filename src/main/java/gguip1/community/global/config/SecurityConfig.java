@@ -5,6 +5,7 @@ import gguip1.community.global.exception.ErrorException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -15,12 +16,22 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
+
+    private final String[] PUBLIC_LIST = {
+            "/users",
+            "/auth",
+            "/images/profile-img",
+            "/images/**"
+    };
 
     private final HandlerExceptionResolver handlerExceptionResolver;
 
@@ -36,14 +47,13 @@ public class SecurityConfig {
 //                     * - 로그인과 회원가입 요청은 CSRF 토큰 없이 허용
 //                     */
 //            )
+            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .csrf(AbstractHttpConfigurer::disable)
             /*
              * CSRF 보호 비활성화
-             * - RESTful API 서버에서는 일반적으로 CSRF 보호가 필요하지 않음
-             * - 클라이언트가 CSRF 토큰을 관리하지 않아도 됨
              */
             .authorizeHttpRequests(auth -> auth
-                    .requestMatchers("/auth", "/users").permitAll()
+                    .requestMatchers(HttpMethod.POST, PUBLIC_LIST).permitAll()
                     .anyRequest().authenticated()
                     /*
                      * Authorization 설정
@@ -102,6 +112,21 @@ public class SecurityConfig {
             );
 
         return http.build();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+
+        configuration.addAllowedOriginPattern("*");
+        configuration.addAllowedHeader("*");
+        configuration.addAllowedMethod("*");
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+
+        return source;
     }
 
     @Bean

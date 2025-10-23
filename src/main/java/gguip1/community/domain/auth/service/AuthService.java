@@ -9,6 +9,7 @@ import gguip1.community.global.exception.ErrorCode;
 import gguip1.community.global.exception.ErrorException;
 import gguip1.community.global.security.CustomUserDetails;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,17 +26,17 @@ public class AuthService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
-    public AuthResponse login(AuthRequest authRequest, HttpServletRequest httpServletRequest) {
+    public AuthResponse login(AuthRequest authRequest, HttpServletRequest httpRequest) {
         Authentication authentication = authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(
-                    authRequest.getEmail(),
-                    authRequest.getPassword()
+                    authRequest.email(),
+                    authRequest.password()
             )
         );
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        HttpSession session = httpServletRequest.getSession(true);
+        HttpSession session = httpRequest.getSession(true);
         session.setAttribute(
                 HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
                 SecurityContextHolder.getContext()
@@ -48,12 +49,6 @@ public class AuthService {
         return userMapper.toAuthResponse(user);
     }
 
-    public void logout(HttpServletRequest request) {
-        SecurityContextHolder.clearContext();
-
-        HttpSession session = request.getSession(false);
-        if (session != null) {
-            session.invalidate();
-        }
+    public void logout() {
     }
 }

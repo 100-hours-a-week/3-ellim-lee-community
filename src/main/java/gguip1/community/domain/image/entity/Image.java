@@ -5,15 +5,6 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 
-/**
- * 이미지 정보를 나타내는 엔티티입니다.
- * Fields:
- *  imageId - 이미지의 고유 식별자 (Long, 자동 생성)
- *  url - 이미지 URL (String)
- *  status - 이미지 상태 (Byte), 0: 활성, 1: 비활성
- *  createdAt - 이미지 생성 시간 (LocalDateTime)
- *  orphanedAt - 이미지 고아화 시간 (LocalDateTime, null 가능)
- */
 @Entity
 @Table(name = "images")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

@@ -1,17 +1,11 @@
 package gguip1.community.domain.user.dto;
 
-import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-import lombok.Data;
+import lombok.AllArgsConstructor;
 
-/**
- * 사용자 정보 수정 요청 DTO입니다.
- * Fields:
- *  nickname - 사용자의 닉네임
- *  profileImageUrl - 프로필 이미지 URL
- */
-@Data
-public class UserUpdateRequest {
-    private String nickname;
-    private Long profileImageId;
+public record UserUpdateRequest(
+        @NotBlank(message = "닉네임을 입력해주세요.") @Pattern(regexp = "^\\S+$", message = "띄어쓰기를 없애주세요.") @Size(max = 30, message = "닉네임은 최대 10자 까지 작성 가능합니다.") String nickname,
+        Long profileImageId) {
 }

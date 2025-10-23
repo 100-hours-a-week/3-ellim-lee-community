@@ -1,9 +1,7 @@
 package gguip1.community.domain.post.dto;
 
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 
-@AllArgsConstructor
-public class AuthorDto {
-    private String nickname;
-    private Long profileImageId;
+@Builder
+public record AuthorDto(String nickname, String profileImageUrl) {
 }

@@ -22,9 +22,9 @@ public class UserMapper {
     public User fromUserCreateRequest(UserCreateRequest request, String encryptedPassword, Image profileImage) {
         return User.builder()
                 .profileImage(profileImage)
-                .email(request.getEmail())
+                .email(request.email())
                 .password(encryptedPassword)
-                .nickname(request.getNickname())
+                .nickname(request.nickname())
                 .build();
     }
 

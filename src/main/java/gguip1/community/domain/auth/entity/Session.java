@@ -1,3 +1,4 @@
+
 package gguip1.community.domain.auth.entity;
 
 import gguip1.community.domain.user.entity.User;

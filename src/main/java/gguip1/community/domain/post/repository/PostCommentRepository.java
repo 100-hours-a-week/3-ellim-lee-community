@@ -17,7 +17,7 @@ public interface PostCommentRepository extends JpaRepository<PostComment, Long> 
 
     @Query(value = """
         SELECT * FROM post_comments
-        WHERE post_id = :postId AND (:lastCommentId IS NULL OR comment_id < :lastCommentId)
+        WHERE post_id = :postId AND (:lastCommentId IS NULL OR comment_id > :lastCommentId)
         ORDER BY comment_id ASC
         LIMIT :limit""", nativeQuery = true)
     List<PostComment> findNextPageByPostId(@Param("postId") Long postId, @Param("lastCommentId") Long lastCommentId, @Param("limit") int limit);

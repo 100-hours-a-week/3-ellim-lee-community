@@ -1,6 +1,5 @@
 package gguip1.community.domain.user.service;
 
-import gguip1.community.domain.auth.entity.Session;
 import gguip1.community.domain.image.entity.Image;
 import gguip1.community.domain.image.repository.ImageRepository;
 import gguip1.community.domain.user.dto.UserCreateRequest;
@@ -31,24 +30,24 @@ public class UserService {
 
 //    @Transactional
     public void createUser(UserCreateRequest request) {
-        if (!request.getPassword().equals(request.getPassword2())){
+        if (!request.password().equals(request.password2())){
             throw new ErrorException(ErrorCode.PASSWORD_MISMATCH);
         } // 비밀번호 불일치 확인
 
-        String encodedPassword = passwordEncoder.encode(request.getPassword()); // 비밀번호 암호화
+        String encodedPassword = passwordEncoder.encode(request.password()); // 비밀번호 암호화
 
-        if (userRepository.existsByEmail(request.getEmail())) {
+        if (userRepository.existsByEmail(request.email())) {
             throw new ErrorException(ErrorCode.DUPLICATE_EMAIL);
-        } // 이메일 중복 확인, DB Index 설정도 필요
+        } // 이메일 중복 확인
 
-        if (userRepository.existsByNickname(request.getNickname())) {
+        if (userRepository.existsByNickname(request.nickname())) {
             throw new ErrorException(ErrorCode.DUPLICATE_NICKNAME);
-        } // 닉네임 중복 확인, DB Index 설정도 필요
+        } // 닉네임 중복 확인
 
         Image profileImage = null;
-        if (request.getProfileImageId() != null){
-            profileImage = imageRepository.findById(request.getProfileImageId())
-                    .orElse(null);
+        if (request.profileImageId() != null){
+            profileImage = imageRepository.findById(request.profileImageId())
+                    .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND));
         } // 프로필 이미지 설정
 
         userRepository.save(userMapper.fromUserCreateRequest(request, encodedPassword, profileImage)); // DB에 저장
@@ -68,43 +67,43 @@ public class UserService {
                 .orElseThrow(() -> new ErrorException(ErrorCode.USER_NOT_FOUND));
 
         Image profileImage = null;
-        if (request.getProfileImageId() != null){
-            profileImage = imageRepository.findById(request.getProfileImageId())
+        if (request.profileImageId() != null){
+            profileImage = imageRepository.findById(request.profileImageId())
                     .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND));
         }
 
-        if (request.getNickname() != null && !request.getNickname().equals(user.getNickname())) {
-            boolean exists = userRepository.existsByNickname(request.getNickname());
-            if (exists) {
+        if (!request.nickname().equals(user.getNickname())) {
+            if (userRepository.existsByNickname(request.nickname())) {
                 throw new ErrorException(ErrorCode.DUPLICATE_NICKNAME);
             }
         }
 
-        user.updateProfile(profileImage, request.getNickname());
+        user.updateProfile(profileImage, request.nickname());
 
         userRepository.save(user);
     }
 
     @Transactional
     public void updateUserPassword(Long userId, UserPasswordUpdateRequest request){
-        if (!request.getNewPassword().equals(request.getNewPassword2())){
+        if (!request.newPassword().equals(request.newPassword2())){
             throw new ErrorException(ErrorCode.PASSWORD_MISMATCH);
         }
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ErrorException(ErrorCode.USER_NOT_FOUND));
 
-        String encodedPassword = passwordEncoder.encode(request.getNewPassword());
+        String encodedPassword = passwordEncoder.encode(request.newPassword());
         user.updatePassword(encodedPassword);
 
         userRepository.save(user);
     }
 
     public void deleteUser(Long userId) {
-        if (!userRepository.existsById(userId)) {
-            throw new ErrorException(ErrorCode.NOT_FOUND);
-        }
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ErrorException(ErrorCode.USER_NOT_FOUND));
 
-        userRepository.deleteById(userId);
+        user.softDelete();
+
+        userRepository.save(user);
     }
 }
