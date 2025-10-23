@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/gguip1/community-fe#readme",
   "dependencies": {
+    "bootstrap": "^5.3.8",
     "express": "^5.1.0"
   }
 }
