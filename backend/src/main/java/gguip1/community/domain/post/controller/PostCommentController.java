@@ -1,6 +1,7 @@
 package gguip1.community.domain.post.controller;
 
 import gguip1.community.domain.auth.entity.Session;
+import gguip1.community.domain.post.dto.PostCommentPageItemResponse;
 import gguip1.community.domain.post.dto.PostCommentPageResponse;
 import gguip1.community.domain.post.dto.PostCommentRequest;
 import gguip1.community.domain.post.service.PostCommentService;
@@ -30,11 +31,10 @@ public class PostCommentController {
     }
 
     @PostMapping("/posts/{postId}/comments")
-    public ResponseEntity<ApiResponse<Void>> createComment(@AuthenticationPrincipal CustomUserDetails user,
-                                                           @PathVariable Long postId,
-                                                           @RequestBody PostCommentRequest postCommentRequest) {
-        postCommentService.createComment(user.getUserId(), postId, postCommentRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success("Comment created", null));
+    public ResponseEntity<ApiResponse<PostCommentPageItemResponse>> createComment(@AuthenticationPrincipal CustomUserDetails user,
+                                                                                  @PathVariable Long postId,
+                                                                                  @RequestBody PostCommentRequest postCommentRequest) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success("Comment created", postCommentService.createComment(user.getUserId(), postId, postCommentRequest)));
     }
 
     @PatchMapping("/posts/{postId}/comments/{commentId}")
