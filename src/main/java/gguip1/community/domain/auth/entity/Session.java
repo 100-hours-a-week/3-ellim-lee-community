@@ -1,3 +1,4 @@
+
 package gguip1.community.domain.auth.entity;
 
 import gguip1.community.domain.user.entity.User;
@@ -19,7 +20,7 @@ public class Session {
     private UUID sessionId;
 
     @Column(name = "user_id", nullable = false)
-    private Integer userId;
+    private Long userId;
 
     @Column(name = "expires_at", nullable = false)
     private LocalDateTime expiresAt;

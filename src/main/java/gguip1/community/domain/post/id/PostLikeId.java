@@ -24,7 +24,7 @@ import java.io.Serializable;
 @EqualsAndHashCode
 public class PostLikeId implements Serializable {
     @Column(name = "user_id", nullable = false)
-    private Integer userId;
+    private Long userId;
 
     @Column(name = "post_id", nullable = false)
     private Long postId;

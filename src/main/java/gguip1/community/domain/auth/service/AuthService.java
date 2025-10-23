@@ -1,35 +1,54 @@
 package gguip1.community.domain.auth.service;
 
 import gguip1.community.domain.auth.dto.AuthRequest;
+import gguip1.community.domain.auth.dto.AuthResponse;
 import gguip1.community.domain.user.entity.User;
+import gguip1.community.domain.user.mapper.UserMapper;
 import gguip1.community.domain.user.repository.UserRepository;
 import gguip1.community.global.exception.ErrorCode;
 import gguip1.community.global.exception.ErrorException;
-import gguip1.community.global.session.SessionManager;
+import gguip1.community.global.security.CustomUserDetails;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.mindrot.jbcrypt.BCrypt;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Service;
-
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class AuthService {
-    private final SessionManager sessionManager;
+    private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
-    public UUID login(AuthRequest request){
-        User user = userRepository.findByEmail(request.getEmail())
+    public AuthResponse login(AuthRequest authRequest, HttpServletRequest httpRequest) {
+        Authentication authentication = authenticationManager.authenticate(
+            new UsernamePasswordAuthenticationToken(
+                    authRequest.email(),
+                    authRequest.password()
+            )
+        );
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        HttpSession session = httpRequest.getSession(true);
+        session.setAttribute(
+                HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
+                SecurityContextHolder.getContext()
+        );
+
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        User user = userRepository.findById(userDetails.getUserId())
                 .orElseThrow(() -> new ErrorException(ErrorCode.USER_NOT_FOUND));
 
-        if (BCrypt.checkpw(request.getPassword(), user.getPassword())){
-            return sessionManager.createSession(user.getUserId()).getSessionId();
-        } else {
-            throw new ErrorException(ErrorCode.PASSWORD_MISMATCH);
-        }
+        return userMapper.toAuthResponse(user);
     }
 
-    public void logout(UUID sessionId){
-        sessionManager.removeSession(sessionId);
+    public void logout() {
     }
 }

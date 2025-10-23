@@ -1,7 +1,7 @@
 package gguip1.community.domain.image.controller;
 
 import gguip1.community.domain.image.dto.ImageResponse;
-import gguip1.community.domain.image.service.LocalStorageImageService;
+import gguip1.community.domain.image.service.ImageService;
 import gguip1.community.global.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,20 +16,21 @@ import java.io.IOException;
 @RestController
 @RequiredArgsConstructor
 public class ImageController {
-    private final LocalStorageImageService imageService;
+    private final ImageService imageService;
 
     @PostMapping("/images/profile-img")
     public ResponseEntity<ApiResponse<ImageResponse>> uploadProfileImage(
             @RequestParam("file") MultipartFile file
     ) throws IOException {
-        ImageResponse response = imageService.upload(file);
+        ImageResponse response = imageService.uploadImage(file);
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success("Profile image uploaded", response));
     }
 
     @PostMapping("/images/post-img")
-    public ResponseEntity<ApiResponse<ImageResponse>> uploadPostImage(@RequestParam("file") MultipartFile file
+    public ResponseEntity<ApiResponse<ImageResponse>> uploadPostImage(
+            @RequestParam("file") MultipartFile file
     ) throws IOException {
-        ImageResponse response = imageService.upload(file);
+        ImageResponse response = imageService.uploadImage(file);
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success("Post image uploaded", response));
     }
 }

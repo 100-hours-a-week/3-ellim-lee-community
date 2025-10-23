@@ -1,19 +1,15 @@
 package gguip1.community.global.config;
 
-import gguip1.community.global.interceptor.AuthInterceptor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-@RequiredArgsConstructor
 public class WebConfig implements WebMvcConfigurer {
-    private final AuthInterceptor authInterceptor;
 
     @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(authInterceptor)
-                .addPathPatterns("/**");
+    public void addResourceHandlers(org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry registry) {
+        String uploadPath = "file:///" + System.getProperty("user.dir") + "/upload/images/";
+        registry.addResourceHandler("/images/**")
+                .addResourceLocations(uploadPath);
     }
 }
