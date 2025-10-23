@@ -4,23 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>로그인</title>
-    <link rel="stylesheet" href="/css/components/header.css">
+    <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
     <header></header>
     <hr>
-    <section class ="user-signin-section">
-        <h2>로그인</h2>
+    <section class="user-signin-section">
+        <h2 class="heading-2 text-center">로그인</h2>
         <form id="sign-in-form">
-            <label for="email">이메일</label>
-            <input type="email" id="email" name="email" placeholder="이메일을 입력하세요." required>
-            <br>
-            <label for="password">비밀번호</label>
-            <input type="password" id="password" name="password" placeholder="비밀번호를 입력하세요." required>
+            <div class="form-group">
+                <label for="email" class="form-label">이메일</label>
+                <input type="email" id="email" name="email" class="form-input" placeholder="이메일을 입력하세요." required>
+            </div>
+            <div class="form-group">
+                <label for="password" class="form-label">비밀번호</label>
+                <input type="password" id="password" name="password" class="form-input" placeholder="비밀번호를 입력하세요." required>
+            </div>
             <p class="hidden-text">* hidden text</p>
-            <br>
-            <button type="submit">로그인</button>
-            <a href="/users/signup">회원가입</a>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary btn-lg">로그인</button>
+                <a href="/users/signup" class="link text-center d-block mt-3">회원가입</a>
+            </div>
         </form>
     </section>
     <script type="module" src="/pages/users/js/userSignInApi.js"></script>
